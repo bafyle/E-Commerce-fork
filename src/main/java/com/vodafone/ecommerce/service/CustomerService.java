@@ -1,6 +1,6 @@
 package com.vodafone.ecommerce.service;
 
-public class UserService {
+public class CustomerService {
 
     // Create User
     public User createUser(User user)
