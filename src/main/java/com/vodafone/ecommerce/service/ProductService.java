@@ -1,2 +1,5 @@
-package com.vodafone.ecommerce.service;public class ItemService {
+package com.vodafone.ecommerce.service;
+public class ProductService
+{
+
 }
