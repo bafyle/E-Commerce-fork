@@ -2,9 +2,17 @@ package com.vodafone.ecommerce.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "address")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,13 +22,4 @@ public class Address {
     @JoinColumn(name = "customer_id", nullable = false)
     @JsonIgnore
     private Customer customer;
-
-    public Address() {
-    }
-
-    public Address(Long id, String address, Customer customer) {
-        this.id = id;
-        this.address = address;
-        this.customer = customer;
-    }
 }
