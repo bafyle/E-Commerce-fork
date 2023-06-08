@@ -23,5 +23,6 @@ public class User
     private boolean active;
 
     @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
 }
