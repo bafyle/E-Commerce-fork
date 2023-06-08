@@ -3,6 +3,7 @@ package com.vodafone.ecommerce.service;
 import com.vodafone.ecommerce.controller.ProductController;
 import com.vodafone.ecommerce.exception.DuplicateEntityException;
 import com.vodafone.ecommerce.exception.NotFoundException;
+import com.vodafone.ecommerce.model.Category;
 import com.vodafone.ecommerce.model.Product;
 import com.vodafone.ecommerce.repository.CategoryRepo;
 import com.vodafone.ecommerce.repository.ProductRepo;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -33,7 +35,11 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        return productRepo.findById(id).orElse(null);
+        Optional<Product> product = productRepo.findById(id);
+        if (product.isEmpty()) {
+            throw new NotFoundException("Product with this id not found.");
+        }
+        return product.get();
     }
 
     public Product addProduct(Product product) {

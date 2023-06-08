@@ -33,8 +33,8 @@ public class ProductController {
         return new ResponseEntity<>(productService.getAllProducts(name, category), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<Product> getProductById(@RequestParam(name = "id") Long id) {
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(productService.getProductById(id), HttpStatus.OK);
     }
 
