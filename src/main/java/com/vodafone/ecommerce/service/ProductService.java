@@ -1,72 +1,47 @@
 package com.vodafone.ecommerce.service;
 
+import com.vodafone.ecommerce.model.Category;
 import com.vodafone.ecommerce.model.Product;
+import com.vodafone.ecommerce.repository.CategoryRepo;
+import com.vodafone.ecommerce.repository.ProductRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public class ProductService
-{
-    // Get All Products
-    public List<Product> getAllProducts()
-    {
-        return null;
+@Service
+public class ProductService {
+
+    private ProductRepo productRepo;
+    private CategoryRepo categoryRepo;
+
+    @Autowired
+    public ProductService(ProductRepo productRepo, CategoryRepo categoryRepo) {
+        this.productRepo = productRepo;
+        this.categoryRepo = categoryRepo;
     }
 
-
-    // Get Products (Pagination)
-    public List<Product> getProductsWithin(int startingPage, int pageSize)
-    {
-        return null;
+    public List<Product> getAllProducts(String name, String category) {
+        return productRepo.findAll();
     }
 
-
-    // Get Products By Name & Category
-    public List<Product> getProductsByNameAndCategory(String name, String category)
-    {
-        return null;
+    public Product getProductById(Long id) {
+        return productRepo.findById(id).orElse(null);
     }
 
-    // Get Products By Name
-    public List<Product> getProductsByName(String name)
-    {
-        return null;
-    }
-    // Get Products By Category
-    public List<Product> getProductsByCategory(String category)
-    {
-        return null;
-    }
+    public Product addProduct(String name, String category, Double price, Integer stock, MultipartFile image) {
+        Product productByName = productRepo.findByName(name).orElse(null);
 
-    // Get Product By ID
-    public Product getProductsById(Long id)
-    {
-        return null;
-    }
+        if (productByName!=null) {
+            throw RuntimeException
+        }
 
-    // Get Products By AdminID
-    public List<Product> getProductsCreatedByAdminId(Long adminId)
-    {
-        return null;
-    }
+        // TODO: handle image path
+        String imagePath = "imagepath";
+        Category categoryByName = categoryRepo.findByName(category).orElse(null);
+        Product product = new Product(null, name, categoryByName, price, stock, null, imagePath);
 
-    // Create New Product
-    public Product createNewProduct(Product product)
-    {
-        return null;
-    }
-    // Update New Product
-    public Product updateProduct(Long productId, Product product)
-    {
-        return null;
-    }
-    // Delete Product
-    public Product deleteProduct(Product product)
-    {
-        return null;
-    }
-    // Delete Product By ID
-    public Product deleteProductById(Long productId)
-    {
-        return null;
+        return productRepo.save(product);
     }
 }
