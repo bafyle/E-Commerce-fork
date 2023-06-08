@@ -1,21 +1,19 @@
 package com.vodafone.ecommerce.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
 @Entity
-@Table(name = "Product")
-@AllArgsConstructor
+@Table(name = "product")
+
 public class Product
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String category; //enum or db table?
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
     private Double price;
     private Integer stock;
     private Double rating;
