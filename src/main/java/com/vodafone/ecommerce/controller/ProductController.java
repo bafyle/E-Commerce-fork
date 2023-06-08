@@ -39,13 +39,20 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> addProduct(
-            @RequestParam(name = "name") String name,
-            @RequestParam(name = "category") String category,
-            @RequestParam(name = "price") Double price,
-            @RequestParam(name = "stock") Integer stock,
-            @RequestParam(name = "image") MultipartFile image) {
+    public ResponseEntity<Product> addProduct() { //TODO: handle image
         Product product = productService.addProduct(name, category, price, stock, image);
         return new ResponseEntity<>(product, HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<Product> updateProduct(
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "category", required = false) String category,
+            @RequestParam(name = "price", required = false) Double price,
+            @RequestParam(name = "stock", required = false) Integer stock,
+            @RequestParam(name = "image", required = false) MultipartFile image
+    ) {
+        Product product = productService.updateProduct(name, category, price, stock, image);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 }

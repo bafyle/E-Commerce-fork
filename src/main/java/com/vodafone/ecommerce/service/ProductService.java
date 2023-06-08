@@ -1,5 +1,7 @@
 package com.vodafone.ecommerce.service;
 
+import com.vodafone.ecommerce.exception.DuplicateEntityException;
+import com.vodafone.ecommerce.exception.NotFoundException;
 import com.vodafone.ecommerce.model.Category;
 import com.vodafone.ecommerce.model.Product;
 import com.vodafone.ecommerce.repository.CategoryRepo;
@@ -34,14 +36,22 @@ public class ProductService {
         Product productByName = productRepo.findByName(name).orElse(null);
 
         if (productByName!=null) {
-            throw RuntimeException
+            throw new DuplicateEntityException("Product with same name already exists.");
+        }
+
+        Category categoryByName = categoryRepo.findByName(category).orElse(null);
+        if (categoryByName == null) {
+            throw new NotFoundException("Category not found."); // TODO: not found or different exception?
         }
 
         // TODO: handle image path
         String imagePath = "imagepath";
-        Category categoryByName = categoryRepo.findByName(category).orElse(null);
         Product product = new Product(null, name, categoryByName, price, stock, null, imagePath);
 
         return productRepo.save(product);
+    }
+
+    public Product updateProduct(String name, String category, Double price, Integer stock, MultipartFile image) {
+
     }
 }

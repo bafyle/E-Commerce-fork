@@ -2,8 +2,8 @@ package com.vodafone.ecommerce.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class ConflictException extends APIException{
-    public ConflictException(String message) {
+public class DuplicateEntityException extends APIException{
+    public DuplicateEntityException(String message) {
         super(message);
     }
 
