@@ -17,16 +17,18 @@ public class UserController
 {
 
     @GetMapping("/")
-    public String home()
+    public String home(Model model)
     {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("name", auth.getPrincipal());
         return "home";
     }
 
-//    @GetMapping("/login")
-//    public String login()
-//    {
-//        return "login";
-//    }
+    @GetMapping("/login")
+    public String login()
+    {
+        return "login";
+    }
 
     @GetMapping("/logout")
     public String logout()
@@ -34,13 +36,6 @@ public class UserController
         return "logout";
     }
 
-//    @GetMapping("/am-i-logged-in")
-//    public String amILoggedIn( Model model)
-//    {
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        model.addAttribute("name", auth.getPrincipal());
-//        return "currentUser";
-//    }
 
     @GetMapping("/logout-success")
     public String loggedOut()

@@ -5,6 +5,8 @@
     <title>Title</title>
 </head>
 <body>
-    hello world
+    hello <span th:text="${name}"></span>
+    <br>
+    <span><a th:href="@{/logout}">logout</a></span>
 </body>
 </html>
