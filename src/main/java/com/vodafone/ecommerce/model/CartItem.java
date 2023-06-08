@@ -1,5 +1,6 @@
 package com.vodafone.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,22 +8,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "product")
+@Table(name = "cart_item")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Product
-{
+public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
-    private Double price;
-    private Integer stock;
-    private Double rating;
-    private String image;
+    @JoinColumn(name = "product_id")
+    private Product product;
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    @JsonIgnore
+    private Cart cart;
 }
