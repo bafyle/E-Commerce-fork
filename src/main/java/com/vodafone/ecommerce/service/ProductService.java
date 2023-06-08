@@ -1,16 +1,20 @@
 package com.vodafone.ecommerce.service;
 
+import com.vodafone.ecommerce.controller.ProductController;
 import com.vodafone.ecommerce.exception.DuplicateEntityException;
 import com.vodafone.ecommerce.exception.NotFoundException;
-import com.vodafone.ecommerce.model.Category;
 import com.vodafone.ecommerce.model.Product;
 import com.vodafone.ecommerce.repository.CategoryRepo;
 import com.vodafone.ecommerce.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class ProductService {
@@ -32,26 +36,34 @@ public class ProductService {
         return productRepo.findById(id).orElse(null);
     }
 
-    public Product addProduct(String name, String category, Double price, Integer stock, MultipartFile image) {
-        Product productByName = productRepo.findByName(name).orElse(null);
-
-        if (productByName!=null) {
+    public Product addProduct(Product product) {
+        if (productRepo.findByName(product.getName()).isPresent()) {
             throw new DuplicateEntityException("Product with same name already exists.");
         }
 
-        Category categoryByName = categoryRepo.findByName(category).orElse(null);
-        if (categoryByName == null) {
+        //TODO: cat service instead of repo?
+        if (categoryRepo.findById(product.getCategory().getId()).isEmpty()) {
             throw new NotFoundException("Category not found."); // TODO: not found or different exception?
         }
 
-        // TODO: handle image path
-        String imagePath = "imagepath";
-        Product product = new Product(null, name, categoryByName, price, stock, null, imagePath);
-
+        // TODO: handle image
         return productRepo.save(product);
     }
 
-    public Product updateProduct(String name, String category, Double price, Integer stock, MultipartFile image) {
+    public Product updateProduct(Product product, Long id) {
+        if (productRepo.findById(id).isEmpty()) {
+            throw new NotFoundException("Product id not found.");
+        }
 
+        product.setId(id);
+        return productRepo.save(product);
     }
+    
+    public void deleteProduct(Long id){
+        if (productRepo.findById(id).isEmpty()) {
+            throw new NotFoundException("Product id not found.");
+        }
+        productRepo.deleteById(id);
+    }
+    //TODO: links with hateoas
 }

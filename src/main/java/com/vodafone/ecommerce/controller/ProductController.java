@@ -39,20 +39,20 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> addProduct() { //TODO: handle image
-        Product product = productService.addProduct(name, category, price, stock, image);
+    public ResponseEntity<Product> addProduct(@RequestBody Product product) { //TODO: handle image
+        Product productRes = productService.addProduct(product);
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity<Product> updateProduct(
-            @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "category", required = false) String category,
-            @RequestParam(name = "price", required = false) Double price,
-            @RequestParam(name = "stock", required = false) Integer stock,
-            @RequestParam(name = "image", required = false) MultipartFile image
-    ) {
-        Product product = productService.updateProduct(name, category, price, stock, image);
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Product> updateProduct(@RequestBody Product product, @PathVariable(name = "id") Long id) {
+        Product productRes = productService.updateProduct(product, id);
         return new ResponseEntity<>(product, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Product> deleteProduct(@PathVariable(name = "id") Long id) {
+        productService.deleteProduct(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
