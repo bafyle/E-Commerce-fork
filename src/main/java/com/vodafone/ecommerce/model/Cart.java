@@ -1,5 +1,6 @@
 package com.vodafone.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,8 +20,9 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    //todo: consider PrimaryKeyJoinColumn
+    @OneToOne(mappedBy = "cart")
+    @JsonIgnore
     private Customer customer;
 
     @OneToMany(mappedBy = "cart")
