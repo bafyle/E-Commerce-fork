@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AdminService {
-    private AdminRepo adminRepo;
+    private final AdminRepo adminRepo;
 
     @Autowired
     public AdminService(AdminRepo adminRepo) {

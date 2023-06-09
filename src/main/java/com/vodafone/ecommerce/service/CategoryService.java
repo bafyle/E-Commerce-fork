@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class CategoryService {
 
-    private CategoryRepo categoryRepo;
+    private final CategoryRepo categoryRepo;
 
     @Autowired
     public CategoryService(CategoryRepo categoryRepo) {

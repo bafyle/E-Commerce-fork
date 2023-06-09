@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AddressService {
-    private AddressRepo addressRepo;
+    private final AddressRepo addressRepo;
 
     @Autowired
     public AddressService(AddressRepo addressRepo) {

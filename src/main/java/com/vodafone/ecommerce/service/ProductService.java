@@ -16,8 +16,8 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
-    private ProductRepo productRepo;
-    private CategoryRepo categoryRepo;
+    private final ProductRepo productRepo;
+    private final CategoryRepo categoryRepo;
 
     @Autowired
     public ProductService(ProductRepo productRepo, CategoryRepo categoryRepo) {

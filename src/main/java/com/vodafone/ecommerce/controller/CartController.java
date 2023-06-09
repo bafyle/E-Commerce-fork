@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/cart")
 public class CartController {
 
-    private CartService cartService;
+    private final CartService cartService;
 
     @Autowired
     public CartController(CartService cartService) {
