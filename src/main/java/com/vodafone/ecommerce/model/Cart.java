@@ -19,6 +19,10 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
+
     @OneToMany(mappedBy = "cart")
     private List<CartItem> cartItems;
 }

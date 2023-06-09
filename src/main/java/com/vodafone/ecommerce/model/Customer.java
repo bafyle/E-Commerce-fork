@@ -23,11 +23,11 @@ public class Customer {
     private String name;
     @Column(unique = true)
     private String email;
+    //todo: check cascade logic
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Address> addresses;
 
-    @OneToOne
-    @JoinColumn(name = "cart_id", nullable = false)
+    @OneToOne(mappedBy = "customer")
     private Cart cart;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
