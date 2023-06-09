@@ -17,12 +17,12 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepo productRepo;
-    private final CategoryRepo categoryRepo;
+    private final CategoryService categoryService;
 
     @Autowired
-    public ProductService(ProductRepo productRepo, CategoryRepo categoryRepo) {
+    public ProductService(ProductRepo productRepo, CategoryService categoryService) {
         this.productRepo = productRepo;
-        this.categoryRepo = categoryRepo;
+        this.categoryService = categoryService;
     }
 
     public List<Product> getAllProducts(Integer page, Integer size, String name, Long categoryId) {
@@ -53,9 +53,7 @@ public class ProductService {
         }
 
         //TODO: cat service instead of repo?
-        if (categoryRepo.findById(product.getCategory().getId()).isEmpty()) {
-            throw new NotFoundException("Category not found."); // TODO: not found or different exception?
-        }
+        categoryService.getCategoryById(product.getCategory().getId());
 
         // TODO: handle image
         return productRepo.save(product);
