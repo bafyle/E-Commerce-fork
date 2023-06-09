@@ -1,22 +1,17 @@
 package com.vodafone.ecommerce.service;
 
-import com.vodafone.ecommerce.controller.ProductController;
 import com.vodafone.ecommerce.exception.DuplicateEntityException;
 import com.vodafone.ecommerce.exception.NotFoundException;
-import com.vodafone.ecommerce.model.Category;
 import com.vodafone.ecommerce.model.Product;
 import com.vodafone.ecommerce.repository.CategoryRepo;
 import com.vodafone.ecommerce.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class ProductService {
@@ -30,8 +25,18 @@ public class ProductService {
         this.categoryRepo = categoryRepo;
     }
 
-    public List<Product> getAllProducts(String name, String category) {
-        return productRepo.findAll();
+    public List<Product> getAllProducts(Integer page, Integer size, String name, Long categoryId) {
+        Pageable pageable = PageRequest.of(page, size);
+        if (name != null && categoryId != null) {
+            return productRepo.findByNameContainsIgnoreCaseAndCategoryId(pageable, name, categoryId).getContent();
+        }
+        else if (name != null) {
+            return productRepo.findByNameContainsIgnoreCase(pageable, name).getContent();
+        }
+        else if (categoryId != null) {
+            return productRepo.findByCategoryId(pageable, categoryId).getContent();
+        }
+        return productRepo.findAll(pageable).getContent(); // TODO: throw error if empty?
     }
 
     public Product getProductById(Long id) {

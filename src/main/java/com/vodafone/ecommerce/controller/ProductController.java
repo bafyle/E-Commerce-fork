@@ -26,11 +26,14 @@ public class ProductController {
         this.productService = productService;
     }
 
+    //TODO: page size according to spring profile?
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts(
+            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
             @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "category", required = false) String category) {
-        return new ResponseEntity<>(productService.getAllProducts(name, category), HttpStatus.OK);
+            @RequestParam(name = "category", required = false) Long categoryId) { //TODO: cat_id?
+        return new ResponseEntity<>(productService.getAllProducts(page, size, name, categoryId), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
