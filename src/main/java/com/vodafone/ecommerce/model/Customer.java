@@ -1,15 +1,14 @@
 package com.vodafone.ecommerce.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
+
 @Entity
 @Table(name = "customer")
 @NoArgsConstructor
@@ -27,7 +26,7 @@ public class Customer {
     private String email;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Address> addresses;
+    private Set<Address> addresses;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id", nullable = false, unique = true)
@@ -35,5 +34,5 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Order> orders;
+    private Set<Order> orders;
 }
