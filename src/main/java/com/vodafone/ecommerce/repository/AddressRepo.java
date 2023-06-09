@@ -1,10 +1,9 @@
 package com.vodafone.ecommerce.repository;
 
-import com.vodafone.ecommerce.model.Customer;
+import com.vodafone.ecommerce.model.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CustomerRepo extends JpaRepository<Customer, Long> {
-
+public interface AddressRepo extends JpaRepository<Address, Long> {
 }

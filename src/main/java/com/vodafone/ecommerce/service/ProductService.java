@@ -1,72 +1,78 @@
 package com.vodafone.ecommerce.service;
 
+import com.vodafone.ecommerce.exception.DuplicateEntityException;
+import com.vodafone.ecommerce.exception.NotFoundException;
 import com.vodafone.ecommerce.model.Product;
+import com.vodafone.ecommerce.repository.CategoryRepo;
+import com.vodafone.ecommerce.repository.ProductRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
-public class ProductService
-{
-    // Get All Products
-    public List<Product> getAllProducts()
-    {
-        return null;
-    }
+@Service
+public class ProductService {
 
+    private final ProductRepo productRepo;
+    private final CategoryService categoryService;
 
-    // Get Products (Pagination)
-    public List<Product> getProductsWithin(int startingPage, int pageSize)
-    {
-        return null;
+    @Autowired
+    public ProductService(ProductRepo productRepo, CategoryService categoryService) {
+        this.productRepo = productRepo;
+        this.categoryService = categoryService;
     }
 
-
-    // Get Products By Name & Category
-    public List<Product> getProductsByNameAndCategory(String name, String category)
-    {
-        return null;
+    public List<Product> getAllProducts(Integer page, Integer size, String name, Long categoryId) {
+        Pageable pageable = PageRequest.of(page, size);
+        if (name != null && categoryId != null) {
+            return productRepo.findByNameContainsIgnoreCaseAndCategoryId(pageable, name, categoryId).getContent();
+        }
+        else if (name != null) {
+            return productRepo.findByNameContainsIgnoreCase(pageable, name).getContent();
+        }
+        else if (categoryId != null) {
+            return productRepo.findByCategoryId(pageable, categoryId).getContent();
+        }
+        return productRepo.findAll(pageable).getContent(); // TODO: throw error if empty?
     }
 
-    // Get Products By Name
-    public List<Product> getProductsByName(String name)
-    {
-        return null;
-    }
-    // Get Products By Category
-    public List<Product> getProductsByCategory(String category)
-    {
-        return null;
+    public Product getProductById(Long id) {
+        Optional<Product> product = productRepo.findById(id);
+        if (product.isEmpty()) {
+            throw new NotFoundException("Product with this id not found.");
+        }
+        return product.get();
     }
 
-    // Get Product By ID
-    public Product getProductsById(Long id)
-    {
-        return null;
+    public Product addProduct(Product product) {
+        if (productRepo.findByName(product.getName()).isPresent()) {
+            throw new DuplicateEntityException("Product with same name already exists.");
+        }
+
+        //TODO: cat service instead of repo?
+        categoryService.getCategoryById(product.getCategory().getId());
+
+        // TODO: handle image
+        return productRepo.save(product);
     }
 
-    // Get Products By AdminID
-    public List<Product> getProductsCreatedByAdminId(Long adminId)
-    {
-        return null;
-    }
+    public Product updateProduct(Product product, Long id) {
+        if (productRepo.findById(id).isEmpty()) {
+            throw new NotFoundException("Product id not found.");
+        }
 
-    // Create New Product
-    public Product createNewProduct(Product product)
-    {
-        return null;
+        product.setId(id);
+        return productRepo.save(product);
     }
-    // Update New Product
-    public Product updateProduct(Long productId, Product product)
-    {
-        return null;
+    
+    public void deleteProduct(Long id){
+        if (productRepo.findById(id).isEmpty()) {
+            throw new NotFoundException("Product id not found.");
+        }
+        productRepo.deleteById(id);
     }
-    // Delete Product
-    public Product deleteProduct(Product product)
-    {
-        return null;
-    }
-    // Delete Product By ID
-    public Product deleteProductById(Long productId)
-    {
-        return null;
-    }
+    //TODO: links with hateoas
 }

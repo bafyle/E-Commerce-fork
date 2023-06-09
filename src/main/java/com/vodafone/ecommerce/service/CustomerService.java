@@ -1,37 +1,23 @@
 package com.vodafone.ecommerce.service;
 
+import com.vodafone.ecommerce.model.Customer;
+import com.vodafone.ecommerce.repository.CustomerRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
 public class CustomerService {
 
-    // Create User
-    public User createUser(User user)
-    {
-        return null;
-    }
-    // Update User
-    public User updateUser(User user)
-    {
-        return null;
-    }
-    // Delete User
-    public User deleteUser(User user)
-    {
-        return null;
+    private final CustomerRepo customerRepo;
+
+    @Autowired
+    public CustomerService(CustomerRepo customerRepo) {
+        this.customerRepo = customerRepo;
     }
 
-    // Update Password
-    public User updatePassword(String oldPassword, String newPassword)
-    {
-        return null;
-    }
-
-    // Update Email
-    public User updateEmail(String newEmail)
-    {
-        return null;
-    }
-    // Update Full Name
-    public User updateFullName(String fullName)
-    {
-        return null;
+    public List<Customer> getAllCustomers() {
+        return customerRepo.findAll();
     }
 }
