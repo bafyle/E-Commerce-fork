@@ -11,18 +11,15 @@ import lombok.Setter;
 
 import java.util.List;
 @Entity
-@Table(name = "customer")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Customer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Customer extends User
+{
+    
     private String name;
-    @Column(unique = true)
-    private String email;
+
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Address> addresses;
 
