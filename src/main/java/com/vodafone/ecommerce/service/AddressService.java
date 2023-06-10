@@ -31,11 +31,13 @@ public class AddressService {
     }
 
     public Address getAddressById(Long customerId, Long addressId) {
-        Customer customer = customerService.getCustomerById(customerId);
-        Optional<Address> addressById = customer.getAddresses().stream().filter(address -> address.getId().equals(addressId)).findFirst();
+//        Customer customer = customerService.getCustomerById(customerId);
+//        Optional<Address> addressById = customer.getAddresses().stream().filter(address -> address.getId().equals(addressId)).findFirst();
+
+        Optional<Address> addressById = addressRepo.findByIdAndCustomerId(addressId, customerId);
 
         if (addressById.isEmpty()) {
-            throw new NotFoundException("This address is not registered to this customer");
+            throw new NotFoundException("This address was not found");
         }
 
         return addressById.get();

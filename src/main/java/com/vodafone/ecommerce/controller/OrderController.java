@@ -3,19 +3,18 @@ package com.vodafone.ecommerce.controller;
 import com.vodafone.ecommerce.model.Order;
 import com.vodafone.ecommerce.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 // Order History
 // Checkout Page
 // Card Number Page
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("customer/{customerId}/order")
 public class OrderController {
     private final OrderService orderService;
 
@@ -25,7 +24,31 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
+    public ResponseEntity<Set<Order>> getAllOrdersByCustomerId(@PathVariable("customerId") Long customerId) {
+        return ResponseEntity.ok(orderService.getAllOrdersByCustomerId(customerId));
+    }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<Order> getOrderById(@PathVariable("customerId") Long customerId, @PathVariable("orderId") Long orderId) {
+        return ResponseEntity.ok(orderService.getOrderById(customerId, orderId));
+    }
+
+    @PostMapping
+    public ResponseEntity<Order> addOrder(@PathVariable("customerId") Long customerId, @RequestBody Order order) {
+        return new ResponseEntity<>(orderService.addOrder(order, customerId), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{orderId}")
+    public ResponseEntity<Order> updateOrder(@PathVariable("customerId") Long customerId,
+                                             @PathVariable("orderId") Long orderId,
+                                             @RequestBody Order order) {
+        return new ResponseEntity<>(orderService.updateOrder(order, customerId, orderId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<Order> deleteOrder(@PathVariable("customerId") Long customerId,
+                                             @PathVariable("orderId") Long orderId) {
+        orderService.deleteOrder(orderId, customerId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
