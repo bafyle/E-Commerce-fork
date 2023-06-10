@@ -38,7 +38,7 @@ public class CustomerService {
 
     public Customer addCustomer(Customer customer) {
         if (customerRepo.findByEmail(customer.getEmail()).isPresent()) {
-            throw new DuplicateEntityException("Customer with this email already exists.");
+            throw new DuplicateEntityException("Account with this email already exists.");
         }
         customer.setCart(new Cart());
         return customerRepo.save(customer);
