@@ -43,4 +43,8 @@ public class CartItemService {
 
         return cartItem.get();
     }
+
+    public void deleteAllCartItemsByProductId(Long id) {
+        cartItemRepo.deleteAllByProductId(id);
+    }
 }

@@ -41,6 +41,10 @@ public class CartService {
         // check if product exists
         Product productById = productService.getProductById(cartItem.getProduct().getId());
 
+        if (productById.getIsArchived()) {
+            throw new InsufficientStockException("Item not available");
+        }
+
         if (productById.getStock() < cartItem.getQuantity()) {
             throw new InsufficientStockException("Insufficient stock requested.");
         }

@@ -1,6 +1,7 @@
 package com.vodafone.ecommerce.service;
 
 import com.vodafone.ecommerce.exception.EmptyCartException;
+import com.vodafone.ecommerce.exception.InsufficientStockException;
 import com.vodafone.ecommerce.exception.NotFoundException;
 import com.vodafone.ecommerce.model.*;
 import com.vodafone.ecommerce.repository.OrderRepo;
@@ -60,6 +61,10 @@ public class OrderService {
         order.setOrderItems(new HashSet<>());
 
         cartItems.forEach(cartItem -> {
+            if (cartItem.getProduct().getIsArchived()) {
+                throw new InsufficientStockException("Product not available");
+            }
+
             OrderItem orderItem = new OrderItem();
 
             orderItem.setOrder(order);
