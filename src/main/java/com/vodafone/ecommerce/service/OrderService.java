@@ -1,13 +1,15 @@
 package com.vodafone.ecommerce.service;
 
+import com.vodafone.ecommerce.exception.EmptyCartException;
+import com.vodafone.ecommerce.exception.InsufficientStockException;
 import com.vodafone.ecommerce.exception.NotFoundException;
-import com.vodafone.ecommerce.model.Address;
-import com.vodafone.ecommerce.model.Customer;
-import com.vodafone.ecommerce.model.Order;
+import com.vodafone.ecommerce.model.*;
 import com.vodafone.ecommerce.repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -15,19 +17,26 @@ import java.util.Set;
 public class OrderService {
     private final OrderRepo orderRepo;
 
+    private final OrderItemService orderItemService;
+
     private final CustomerService customerService;
 
+    private final CartService cartService;
+
+    private final ProductService productService;
+
     @Autowired
-    public OrderService(OrderRepo orderRepo, CustomerService customerService) {
+    public OrderService(OrderRepo orderRepo, CustomerService customerService, CartService cartService,
+                        OrderItemService orderItemService, ProductService productService) {
         this.orderRepo = orderRepo;
         this.customerService = customerService;
+        this.cartService = cartService;
+        this.orderItemService = orderItemService;
+        this.productService = productService;
     }
 
-    public Set<Order> getAllOrdersByCustomerId(Long customerId) {
-//        return orderRepo.findByCustomerId(customerId);
-        Customer customer = customerService.getCustomerById(customerId);
-
-        return customer.getOrders();
+    public List<Order> getAllOrdersByCustomerId(Long customerId) {
+        return orderRepo.findByCustomerIdOrderByCreatedAtDesc(customerId);
     }
 
     public Order getOrderById(Long customerId, Long orderId) {
@@ -40,35 +49,70 @@ public class OrderService {
         return order.get();
     }
 
-    public Order addOrder(Order order, Long customerId) {
-        Customer customer = customerService.getCustomerById(customerId);
+    public Order checkoutCart(Long customerId) {
+        Cart cart = cartService.getCartByCustomerId(customerId);
+        Set<CartItem> cartItems = cart.getCartItems();
 
-        // TODO: validate on creation date?
+        if (cartItems.isEmpty()) {
+            throw new EmptyCartException("Order can't be created, Cart is empty");
+        }
 
-        order.setCustomer(customer);
+        Order order = new Order();
+        order.setOrderItems(new HashSet<>());
+
+        cartItems.forEach(cartItem -> {
+            if (cartItem.getProduct().getIsArchived()) {
+                throw new InsufficientStockException("Product not available");
+            }
+
+            OrderItem orderItem = new OrderItem();
+
+            orderItem.setOrder(order);
+            orderItem.setProduct(cartItem.getProduct());
+
+            order.getOrderItems().add(orderItem);
+        });
+
+        // TODO: handle payment
+
+
+        cartService.deleteAllCartItems(customerId);
+
+        order.setCustomer(customerService.getCustomerById(customerId));
+
         return orderRepo.save(order);
     }
 
-    public Order updateOrder(Order order, Long customerId, Long orderId) {
-        Customer customer = customerService.getCustomerById(customerId);
+    public Order updateOrderStatus(Order order, Long customerId, Long orderId) {
+        Optional<Order> orderById = orderRepo.findByIdAndCustomerId(orderId, customerId);
 
-        if (customer.getOrders().stream().noneMatch(order1 -> order1.getId().equals(orderId))) {
+        if (orderById.isEmpty()) {
             throw new NotFoundException("This order is not registered to this customer");
         }
 
-        order.setId(orderId);
-        order.setCustomer(customer);
+        orderById.get().setStatus(order.getStatus());
 
-        return orderRepo.save(order);
+        return orderRepo.save(orderById.get());
     }
 
-    public void deleteOrder(Long customerId, Long orderId) {
-        Optional<Order> order = orderRepo.findByIdAndCustomerId(orderId,customerId);
+    public OrderItem updateOrderItemRating(OrderItem orderItem, Long customerId, Long orderId, Long orderItemId) {
+        Optional<OrderItem> orderItemById = orderItemService.findByIdAndOrderIdAndCustomerId(orderId, customerId, orderItemId);
 
-        if (order.isEmpty()) {
+        if (orderItemById.isEmpty()) {
             throw new NotFoundException("This order is not registered to this customer");
         }
 
-        orderRepo.delete(order.get());
+        orderItemById.get().setRating(orderItem.getRating());
+
+        OrderItem orderItemRes = orderItemService.updateOrderItemRating(orderItemById.get());
+
+        Double productRating = orderItemService.avgRatingByProductId(orderItem.getProduct().getId());
+
+        System.out.println("??????????????" + productRating);
+
+        productService.updateProductRating(orderItem.getProduct().getId(), productRating);
+
+        return orderItemRes;
+
     }
 }

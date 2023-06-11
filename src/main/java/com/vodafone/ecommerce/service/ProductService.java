@@ -2,9 +2,10 @@ package com.vodafone.ecommerce.service;
 
 import com.vodafone.ecommerce.exception.DuplicateEntityException;
 import com.vodafone.ecommerce.exception.NotFoundException;
+import com.vodafone.ecommerce.model.CartItem;
 import com.vodafone.ecommerce.model.Product;
-import com.vodafone.ecommerce.repository.CategoryRepo;
 import com.vodafone.ecommerce.repository.ProductRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +20,13 @@ public class ProductService {
     private final ProductRepo productRepo;
     private final CategoryService categoryService;
 
+    private final CartItemService cartItemService;
+
     @Autowired
-    public ProductService(ProductRepo productRepo, CategoryService categoryService) {
+    public ProductService(ProductRepo productRepo, CategoryService categoryService, CartItemService cartItemService) {
         this.productRepo = productRepo;
         this.categoryService = categoryService;
+        this.cartItemService = cartItemService;
     }
 
     public List<Product> getAllProducts(Integer page, Integer size, String name, Long categoryId) {
@@ -54,6 +58,7 @@ public class ProductService {
 
         //TODO: cat service instead of repo?
         categoryService.getCategoryById(product.getCategory().getId());
+        product.setIsArchived(false); //default?
 
         // TODO: handle image
         return productRepo.save(product);
@@ -67,12 +72,31 @@ public class ProductService {
         product.setId(id);
         return productRepo.save(product);
     }
-    
+
+    @Transactional
     public void deleteProduct(Long id){
-        if (productRepo.findById(id).isEmpty()) {
+        Optional<Product> product = productRepo.findById(id);
+        if (product.isEmpty()) {
             throw new NotFoundException("Product id not found.");
         }
-        productRepo.deleteById(id);
+
+        product.get().setIsArchived(true);
+
+        productRepo.save(product.get());
+
+        cartItemService.deleteAllCartItemsByProductId(id);
+    }
+
+    public void updateProductRating(Long id, Double productRating) {
+        Optional<Product> product = productRepo.findById(id);
+
+        if (product.isEmpty()) {
+            throw new NotFoundException("Product id not found.");
+        }
+
+        product.get().setRating(productRating);
+
+        productRepo.save(product.get());
     }
     //TODO: links with hateoas
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "product")
@@ -26,4 +27,5 @@ public class Product
     private Integer stock;
     private Double rating;
     private String image;
+    private Boolean isArchived;
 }
