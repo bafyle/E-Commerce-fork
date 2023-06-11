@@ -8,9 +8,18 @@ import com.vodafone.ecommerce.model.User;
 import com.vodafone.ecommerce.repository.AdminRepo;
 import com.vodafone.ecommerce.repository.CartRepo;
 import com.vodafone.ecommerce.repository.CustomerRepo;
+import com.vodafone.ecommerce.util.StringUtils;
+
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
+
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +27,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService
 {
+    
     @Autowired
     CustomerRepo cr;
     
@@ -30,13 +40,25 @@ public class UserService
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public Customer createCustomer(Customer customer)
+    @Autowired AuthenticationService authService;
+
+    // Customer registeration
+    public Customer registerCustomer(Customer customer, HttpServletRequest request)
     {
         checkIfUserExists(customer);
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
+        String randomCode = StringUtils.createRandomString(15);
+        customer.setVerficationCode(randomCode);
+        customer.setEnabled(false);
         var cartFromDB = cartRepo.save(new Cart());
         customer.setCart(cartFromDB);
         Customer customerToReturn = cr.save(customer);
+        try {
+            authService.sendVerificationEmail(customerToReturn, request);
+        } catch (UnsupportedEncodingException | MalformedURLException | MessagingException | URISyntaxException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return customerToReturn;
     }
 
@@ -46,6 +68,22 @@ public class UserService
         admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         Admin adminToReturn = ar.save(admin);
         return adminToReturn;
+    }
+
+    @Deprecated
+    public Admin updateAdmin(Long adminId, Admin adminNewData)
+    {
+        var optionalAdmin = ar.findById(adminId);
+        if(optionalAdmin.isEmpty())
+            throw new UsernameNotFoundException("No user with this id");
+        Admin adminFromDB = optionalAdmin.get();
+        if(!adminFromDB.getEmail().equals(adminNewData.getEmail()))
+        {
+            checkIfUserExists(adminNewData);
+        }
+        Admin newAdmin = new Admin();
+        // set newAdmin data from adminNewData and save newAdminData
+        return ar.save(newAdmin);
     }
 
     private void checkIfUserExists(User u)
@@ -59,5 +97,4 @@ public class UserService
         if(ar.findByEmail(u.getEmail()).isPresent())
             throw new UserAlreadyExists("User with this email already exists");
     }
-
 }

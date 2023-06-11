@@ -8,8 +8,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.vodafone.ecommerce.model.Admin;
+import com.vodafone.ecommerce.model.Customer;
 import com.vodafone.ecommerce.model.SecurityUser;
-import com.vodafone.ecommerce.model.User;
 import com.vodafone.ecommerce.repository.AdminRepo;
 import com.vodafone.ecommerce.repository.CustomerRepo;
 
@@ -25,12 +26,12 @@ public class UserDetailsServiceImpl implements UserDetailsService
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
-        var adminFromDB = ar.findByEmail(username);
-        if (adminFromDB.isPresent())
-            return new SecurityUser(adminFromDB.get());
-        var customerFromDb = cr.findByEmail(username);
-        if(customerFromDb.isEmpty())
+        Optional<Customer> customerFromDB = cr.findByEmail(username);
+        if (customerFromDB.isPresent())
+            return new SecurityUser(customerFromDB.get());
+        Optional<Admin> adminFromDB = ar.findByEmail(username);
+        if(adminFromDB.isEmpty())
             throw new UsernameNotFoundException("No user found");
-        return new SecurityUser(customerFromDb.get());
+        return new SecurityUser(adminFromDB.get());
     }
 }

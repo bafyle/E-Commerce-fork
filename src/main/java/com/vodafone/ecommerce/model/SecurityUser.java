@@ -5,10 +5,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
+@Getter
 public class SecurityUser implements UserDetails
 {
     private User user;
@@ -16,10 +18,19 @@ public class SecurityUser implements UserDetails
     {
         this.user = user;
     }
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities()
     {
-        return null;
+        if(user instanceof Customer == true)
+        {
+            return new ArrayList<SimpleGrantedAuthority>(){{
+                add(new SimpleGrantedAuthority("Customer"));
+            }};
+        }
+        return new ArrayList<SimpleGrantedAuthority>(){{
+            add(new SimpleGrantedAuthority("Admin"));
+        }};
     }
 
     @Override
@@ -40,7 +51,7 @@ public class SecurityUser implements UserDetails
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !user.isLocked();
     }
 
     @Override
@@ -50,6 +61,6 @@ public class SecurityUser implements UserDetails
 
     @Override
     public boolean isEnabled() {
-        return user.isActive();
+        return user.isEnabled();
     }
 }

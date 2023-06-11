@@ -16,10 +16,9 @@ import java.util.Set;
 @Setter
 public class Customer extends User
 {
-    
     private String name;
-    
-    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Address> addresses;
 
     @OneToOne(cascade = CascadeType.ALL)
