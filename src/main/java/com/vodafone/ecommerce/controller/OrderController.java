@@ -1,6 +1,8 @@
 package com.vodafone.ecommerce.controller;
 
 import com.vodafone.ecommerce.model.Order;
+import com.vodafone.ecommerce.model.OrderItem;
+import com.vodafone.ecommerce.service.CartService;
 import com.vodafone.ecommerce.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import java.util.Set;
 public class OrderController {
     private final OrderService orderService;
 
+
     @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
@@ -34,21 +37,22 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Order> addOrder(@PathVariable("customerId") Long customerId, @RequestBody Order order) {
-        return new ResponseEntity<>(orderService.addOrder(order, customerId), HttpStatus.CREATED);
+    public ResponseEntity<Order> checkoutCart(@PathVariable("customerId") Long customerId) {
+        return new ResponseEntity<>(orderService.checkoutCart(customerId), HttpStatus.CREATED);
     }
 
     @PutMapping("/{orderId}")
-    public ResponseEntity<Order> updateOrder(@PathVariable("customerId") Long customerId,
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable("customerId") Long customerId,
                                              @PathVariable("orderId") Long orderId,
                                              @RequestBody Order order) {
-        return new ResponseEntity<>(orderService.updateOrder(order, customerId, orderId), HttpStatus.OK);
+        return new ResponseEntity<>(orderService.updateOrderStatus(order, customerId, orderId), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{orderId}")
-    public ResponseEntity<Order> deleteOrder(@PathVariable("customerId") Long customerId,
-                                             @PathVariable("orderId") Long orderId) {
-        orderService.deleteOrder(orderId, customerId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @PutMapping("/{orderId}/{orderItemId}")
+    public ResponseEntity<OrderItem> updateOrderItemRating(@PathVariable("customerId") Long customerId,
+                                                   @PathVariable("orderId") Long orderId,
+                                                   @PathVariable("orderItemId") Long orderItemId,
+                                                   @RequestBody OrderItem orderItem) {
+        return new ResponseEntity<>(orderService.updateOrderItemRating(orderItem, customerId, orderId, orderItemId), HttpStatus.OK);
     }
 }

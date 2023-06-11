@@ -78,6 +78,8 @@ public class CartService {
     public Cart deleteAllCartItems(Long customerId) {
         Cart cart = getCartByCustomerId(customerId);
 
+        cart.getCartItems().clear();
+
         cartItemService.deleteAllCartItems(cart.getId());
         return cart;
     }
