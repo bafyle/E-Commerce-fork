@@ -17,10 +17,9 @@ import java.util.List;
 @Setter
 public class Customer extends User
 {
-    
     private String name;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Address> addresses;
 
     @OneToOne

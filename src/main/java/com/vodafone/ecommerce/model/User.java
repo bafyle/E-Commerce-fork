@@ -21,5 +21,7 @@ public abstract class User
     @Column(nullable = false)
     private String password;
 
-    private boolean active;
+    private boolean enabled;
+
+    private String verficationCode;
 }

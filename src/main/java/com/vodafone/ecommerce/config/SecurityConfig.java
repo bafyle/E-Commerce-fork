@@ -29,10 +29,12 @@ public class SecurityConfig
                 .csrf(AbstractHttpConfigurer::disable)
                 .userDetailsService(service)
                 .authorizeHttpRequests((request)-> request.requestMatchers(
-                        "/login", "/logout", "/logout-success", "/register").permitAll())
+                        "/login", "/logout", 
+                        "/logout-success", "/register", "/verify",
+                        "/login-failed").permitAll())
 
                 // login and logout-success pages can be edited
-                .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/", true).failureForwardUrl("/login").permitAll())
+                .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/", true).failureForwardUrl("/login-failed").permitAll())
                 .logout((form) -> form.logoutUrl("/logout").logoutSuccessUrl("/logout-success").permitAll())
                 .authorizeHttpRequests((auth) -> auth.anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
