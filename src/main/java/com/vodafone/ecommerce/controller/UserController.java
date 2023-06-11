@@ -1,8 +1,12 @@
 package com.vodafone.ecommerce.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.vodafone.ecommerce.model.Customer;
+import com.vodafone.ecommerce.model.SecurityUser;
 import com.vodafone.ecommerce.service.AuthenticationService;
 import com.vodafone.ecommerce.service.UserService;
 
@@ -29,11 +34,12 @@ public class UserController
     @Autowired
     AuthenticationService authService;
 
+    @PreAuthorize("hasRole('Admin')")
     @GetMapping("/")
-    public String home(Model model)
+    public String home(Model model, @AuthenticationPrincipal SecurityUser user)
     {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        model.addAttribute("name", auth.getPrincipal());
+        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("name", user.getUsername());
         return "home";
     }
 
@@ -82,5 +88,11 @@ public class UserController
         } else {
             return "verify_fail";
         }
+    }
+
+    @GetMapping("/error")
+    public String error()
+    {
+        return "error";
     }
 }

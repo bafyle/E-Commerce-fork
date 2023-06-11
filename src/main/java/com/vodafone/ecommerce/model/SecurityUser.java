@@ -5,8 +5,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.Getter;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
+@Getter
 public class SecurityUser implements UserDetails
 {
     private User user;
@@ -18,7 +22,15 @@ public class SecurityUser implements UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities()
     {
-        return null;
+        if(user instanceof Customer == true)
+        {
+            return new ArrayList<SimpleGrantedAuthority>(){{
+                add(new SimpleGrantedAuthority("Customer"));
+            }};
+        }
+        return new ArrayList<SimpleGrantedAuthority>(){{
+            add(new SimpleGrantedAuthority("Admin"));
+        }};
     }
 
     @Override
