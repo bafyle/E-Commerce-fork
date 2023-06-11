@@ -6,9 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 
 @Entity
@@ -24,12 +25,16 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
+    @JsonIgnore
     private Customer customer;
 
-    @OneToMany(mappedBy = "order")
-    private List<OrderItem> orderItems;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private Set<OrderItem> orderItems;
 
-    private LocalDate createdAt;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     private String paymentMethod; //enum
+
+    private String status; //enum
 }
