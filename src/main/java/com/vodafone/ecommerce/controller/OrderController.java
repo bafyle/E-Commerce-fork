@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 // Order History
@@ -27,7 +28,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<Set<Order>> getAllOrdersByCustomerId(@PathVariable("customerId") Long customerId) {
+    public ResponseEntity<List<Order>> getAllOrdersByCustomerId(@PathVariable("customerId") Long customerId) {
         return ResponseEntity.ok(orderService.getAllOrdersByCustomerId(customerId));
     }
 

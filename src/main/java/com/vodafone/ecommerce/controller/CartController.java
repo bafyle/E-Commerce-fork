@@ -35,7 +35,7 @@ public class CartController {
     public ResponseEntity<Cart> updateCartItem(@PathVariable(name = "customerId") Long customerId,
                                            @PathVariable(name = "cartItemId") Long cartItemId,
                                            @RequestBody CartItem cartItem) {
-        Cart cartRes = cartService.updateCartItem(cartItem, customerId, cartItemId);
+        Cart cartRes = cartService.updateCartItemQuantity(cartItem, customerId, cartItemId);
         return new ResponseEntity<>(cartRes, HttpStatus.OK);
     }
 

@@ -3,7 +3,6 @@ package com.vodafone.ecommerce.service;
 import com.vodafone.ecommerce.exception.DuplicateEntityException;
 import com.vodafone.ecommerce.exception.NotFoundException;
 import com.vodafone.ecommerce.model.Product;
-import com.vodafone.ecommerce.repository.CategoryRepo;
 import com.vodafone.ecommerce.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -73,6 +72,18 @@ public class ProductService {
             throw new NotFoundException("Product id not found.");
         }
         productRepo.deleteById(id);
+    }
+
+    public void updateProductRating(Long id, Double productRating) {
+        Optional<Product> product = productRepo.findById(id);
+
+        if (product.isEmpty()) {
+            throw new NotFoundException("Product id not found.");
+        }
+
+        product.get().setRating(productRating);
+
+        productRepo.save(product.get());
     }
     //TODO: links with hateoas
 }

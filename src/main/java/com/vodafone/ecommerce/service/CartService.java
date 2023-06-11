@@ -54,10 +54,10 @@ public class CartService {
         return cartRepo.save(cart);
     }
 
-    public Cart updateCartItem(CartItem cartItem, Long customerId, Long cartItemId) {
+    public Cart updateCartItemQuantity(CartItem cartItem, Long customerId, Long cartItemId) {
         // check if cart exists
         Cart cart = getCartByCustomerId(customerId);
-
+        CartItem cartItemById = cartItemService.getCartItemByIdAndCustomerId(cartItemId, customerId);
         // check if product exists
         Product productById = productService.getProductById(cartItem.getProduct().getId());
 
@@ -65,13 +65,14 @@ public class CartService {
             throw new InsufficientStockException("Insufficient stock requested.");
         }
 
-        if (cart.getCartItems().stream().noneMatch(cartItem1 -> cartItem1.getId().equals(cartItemId))) {
-            throw new DuplicateEntityException("This product does not exist in the cart");
-        }
+//        if (cart.getCartItems().stream().noneMatch(cartItem1 -> cartItem1.getId().equals(cartItemId))) {
+//            throw new DuplicateEntityException("This product does not exist in the cart");
+//        }
 
-        cartItem.setCart(cart);
+        cartItemById.setCart(cart);
+        cartItemById.setQuantity(cartItem.getQuantity());
 
-        cartItemService.updateCartItem(cartItem, cartItemId);
+        cartItemService.updateCartItem(cartItemById, cartItemId);
         return cart;
     }
 
@@ -87,7 +88,9 @@ public class CartService {
     public Cart deleteCartItem(Long customerId, Long cartItemId) {
         Cart cart = getCartByCustomerId(customerId);
 
+        CartItem cartItem = cartItemService.getCartItemByIdAndCustomerId(cartItemId, customerId);
+
         cartItemService.deleteCartItemById(cartItemId);
-    return cart;
+        return cart;
     }
 }

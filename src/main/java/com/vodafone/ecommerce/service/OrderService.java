@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,19 +22,20 @@ public class OrderService {
 
     private final CartService cartService;
 
+    private final ProductService productService;
+
     @Autowired
-    public OrderService(OrderRepo orderRepo, CustomerService customerService, CartService cartService, OrderItemService orderItemService) {
+    public OrderService(OrderRepo orderRepo, CustomerService customerService, CartService cartService,
+                        OrderItemService orderItemService, ProductService productService) {
         this.orderRepo = orderRepo;
         this.customerService = customerService;
         this.cartService = cartService;
         this.orderItemService = orderItemService;
+        this.productService = productService;
     }
 
-    public Set<Order> getAllOrdersByCustomerId(Long customerId) {
-//        return orderRepo.findByCustomerId(customerId);
-        Customer customer = customerService.getCustomerById(customerId);
-
-        return customer.getOrders();
+    public List<Order> getAllOrdersByCustomerId(Long customerId) {
+        return orderRepo.findByCustomerIdOrderByCreatedAtDesc(customerId);
     }
 
     public Order getOrderById(Long customerId, Long orderId) {
@@ -54,8 +56,6 @@ public class OrderService {
             throw new EmptyCartException("Order can't be created, Cart is empty");
         }
 
-        // TODO: handle payment
-
         Order order = new Order();
         order.setOrderItems(new HashSet<>());
 
@@ -67,6 +67,9 @@ public class OrderService {
 
             order.getOrderItems().add(orderItem);
         });
+
+        // TODO: handle payment
+
 
         cartService.deleteAllCartItems(customerId);
 
@@ -96,7 +99,15 @@ public class OrderService {
 
         orderItemById.get().setRating(orderItem.getRating());
 
-        return orderItemService.updateOrderItemRating(orderItemById.get());
+        OrderItem orderItemRes = orderItemService.updateOrderItemRating(orderItemById.get());
+
+        Double productRating = orderItemService.avgRatingByProductId(orderItem.getProduct().getId());
+
+        System.out.println("??????????????" + productRating);
+
+        productService.updateProductRating(orderItem.getProduct().getId(), productRating);
+
+        return orderItemRes;
 
     }
 }
