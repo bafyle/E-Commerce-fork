@@ -22,6 +22,9 @@ public class SecurityConfig
     @Autowired
     UserDetailsServiceImpl service;
 
+    @Autowired
+    CustomLoginFailureHandler loginFailureHandler;
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
     {
@@ -34,7 +37,11 @@ public class SecurityConfig
                         "/login-failed").permitAll())
 
                 // login and logout-success pages can be edited
-                .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/", true).failureForwardUrl("/login-failed").permitAll())
+                .formLogin(form -> form.loginPage("/login")
+                    .defaultSuccessUrl("/", true)
+                    .failureHandler(loginFailureHandler)
+                    .failureForwardUrl("/login-failed") // this must come after failureHandler
+                    .permitAll())
                 .logout((form) -> form.logoutUrl("/logout").logoutSuccessUrl("/logout-success").permitAll())
                 .authorizeHttpRequests((auth) -> auth.anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())

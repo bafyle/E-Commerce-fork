@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.vodafone.ecommerce.model.Customer;
+import com.vodafone.ecommerce.service.AuthenticationService;
 import com.vodafone.ecommerce.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,12 +26,14 @@ public class UserController
     @Autowired
     UserService userService;
 
+    @Autowired
+    AuthenticationService authService;
+
     @GetMapping("/")
     public String home(Model model)
     {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("name", auth.getPrincipal());
-
         return "home";
     }
 
@@ -51,7 +54,6 @@ public class UserController
     {
         return "logout";
     }
-
 
     @GetMapping("/logout-success")
     public String loggedOut()
@@ -75,7 +77,7 @@ public class UserController
 
     @GetMapping("/verify")
     public String verifyUser(@Param("code") String code) {
-        if (userService.verify(code)) {
+        if (authService.verifyCustomer(code)) {
             return "verify_success";
         } else {
             return "verify_fail";

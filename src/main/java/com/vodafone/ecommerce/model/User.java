@@ -24,4 +24,7 @@ public abstract class User
     private boolean enabled;
 
     private String verficationCode;
+
+    private int loginTries = 0;
+    private boolean locked;
 }
