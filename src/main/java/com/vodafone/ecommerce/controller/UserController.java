@@ -111,6 +111,12 @@ public class UserController
         }
     }
 
+    @GetMapping("/login-failed")
+    public String loginFailed()
+    {
+        return "login_failed";
+    }
+
     @GetMapping("/error")
     public String error(Model model, HttpServletResponse response)
     {

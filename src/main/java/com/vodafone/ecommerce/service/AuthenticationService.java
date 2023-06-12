@@ -147,16 +147,15 @@ public class AuthenticationService
     public void processLoginTry(String email, HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         Optional<Customer> customer = cr.findByEmail(email);
-        var customerFromDB = customer.get();
         if(
-            customerFromDB == null 
-            || customerFromDB.isLocked()
-            || !customerFromDB.isEnabled()
+            customer.isEmpty() == true
+            || customer.get().isLocked()
+            || !customer.get().isEnabled()
             )
         {
-            // response.sendRedirect("/login-failed");
             return;
         }
+        var customerFromDB = customer.get();
         if(customerFromDB.getLoginTries() < 2)
         {
             customerFromDB.setLoginTries(customerFromDB.getLoginTries() + 1);

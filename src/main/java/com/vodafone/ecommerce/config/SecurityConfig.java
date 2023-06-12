@@ -37,14 +37,14 @@ public class SecurityConfig
                         "/logout-success", "/register", "/verify",
                         "/login-failed", "/password-reset").permitAll()
                         .requestMatchers(HttpMethod.POST, "/password-reset")
-                        .permitAll())
+                        .permitAll()
+                        )
 
                 // login and logout-success pages can be edited
                 .formLogin(form -> form.loginPage("/login")
-                    .defaultSuccessUrl("/", true)
+                    .defaultSuccessUrl("/", true)                    
                     .failureHandler(loginFailureHandler)
-                    .failureForwardUrl("/login-failed") // this must come after failureHandler
-                    .permitAll())
+                    )
                 .logout((form) -> form.logoutUrl("/logout").logoutSuccessUrl("/logout-success").permitAll())
                 .authorizeHttpRequests((auth) -> auth.anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())

@@ -31,6 +31,7 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
     {
         String email = request.getParameter("username");
         authService.processLoginTry(email, request, response);
-        super.onAuthenticationFailure(request, response, exception);
+        String redirectUrl = request.getContextPath() + "/login-failed";
+        response.sendRedirect(redirectUrl);
     }
 }
