@@ -5,12 +5,14 @@ import com.vodafone.ecommerce.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/category")
+@PreAuthorize("hasAuthority('Admin')")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -21,10 +23,12 @@ public class CategoryController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('Customer','Admin')")
     public ResponseEntity<List<Category>> getAllCategories() {
         return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
     }
-    
+
+    @PreAuthorize("hasAnyAuthority('Customer','Admin')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(categoryService.getCategoryById(id), HttpStatus.OK);

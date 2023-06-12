@@ -1,18 +1,18 @@
 package com.vodafone.ecommerce.controller;
 
 import com.vodafone.ecommerce.model.Customer;
-import com.vodafone.ecommerce.model.Customer;
-import com.vodafone.ecommerce.service.CartService;
 import com.vodafone.ecommerce.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/customer")
+@PreAuthorize("hasAuthority('Customer')")
 public class CustomerController {
     private final CustomerService customerService;
 
@@ -22,6 +22,7 @@ public class CustomerController {
     }
 
     @GetMapping
+//    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<List<Customer>> getAllCustomers() {
         return new ResponseEntity<>(customerService.getAllCustomers(), HttpStatus.OK);
     }

@@ -5,6 +5,7 @@ import com.vodafone.ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/product")
+@PreAuthorize("hasAuthority('Admin')")
 public class ProductController {
 
     private final ProductService productService;
@@ -28,6 +30,7 @@ public class ProductController {
 
     //TODO: page size according to spring profile?
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('Admin','Customer')")
     public ResponseEntity<List<Product>> getAllProducts(
             @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
@@ -37,6 +40,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAnyAuthority('Admin','Customer')")
     public ResponseEntity<Product> getProductById(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(productService.getProductById(id), HttpStatus.OK);
     }
