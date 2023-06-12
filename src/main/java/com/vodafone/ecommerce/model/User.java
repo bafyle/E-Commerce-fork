@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Entity
 @Table(name="User")
-@Inheritance
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
 public abstract class User
 {
@@ -23,8 +23,12 @@ public abstract class User
 
     private boolean enabled;
 
+    private String name;
+
     private String verficationCode;
 
     private int loginTries = 0;
     private boolean locked;
+
+    public abstract String getRole();
 }

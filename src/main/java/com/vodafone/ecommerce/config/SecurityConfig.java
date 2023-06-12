@@ -4,6 +4,7 @@ import com.vodafone.ecommerce.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,7 +35,9 @@ public class SecurityConfig
                 .authorizeHttpRequests((request)-> request.requestMatchers(
                         "/login", "/logout", 
                         "/logout-success", "/register", "/verify",
-                        "/login-failed").permitAll())
+                        "/login-failed", "/password-reset").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/password-reset")
+                        .permitAll())
 
                 // login and logout-success pages can be edited
                 .formLogin(form -> form.loginPage("/login")
