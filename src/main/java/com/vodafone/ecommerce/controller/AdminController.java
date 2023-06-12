@@ -1,11 +1,14 @@
 package com.vodafone.ecommerce.controller;
 
 import com.vodafone.ecommerce.model.Admin;
+import com.vodafone.ecommerce.model.SecurityUser;
 import com.vodafone.ecommerce.service.AdminService;
+import com.vodafone.ecommerce.util.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,7 +53,9 @@ public class AdminController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Admin> deleteAdmin(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Admin> deleteAdmin(@PathVariable(name = "id") Long id,
+                                             @AuthenticationPrincipal SecurityUser user) {
+        AuthUtil.isLoggedInUserThrowException(id, user.getUser().getId());
         adminService.deleteAdmin(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
