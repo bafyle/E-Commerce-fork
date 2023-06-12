@@ -8,7 +8,6 @@ import com.vodafone.ecommerce.model.User;
 import com.vodafone.ecommerce.repository.AdminRepo;
 import com.vodafone.ecommerce.repository.CartRepo;
 import com.vodafone.ecommerce.repository.CustomerRepo;
-import com.vodafone.ecommerce.repository.UserBaseRepo;
 import com.vodafone.ecommerce.util.StringUtils;
 
 import jakarta.mail.MessagingException;
@@ -17,7 +16,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -82,6 +80,16 @@ public class UserService
         return adminToReturn;
     }
 
+    public void deleteAdmin(Long adminId)
+    {
+        ar.deleteById(adminId);;
+    }
+
+    public void deleteAdmin(String email)
+    {
+        ar.deleteByEmail(email);
+    }
+
     public Admin updateAdmin(Long adminId, Admin adminNewData)
     {
         var optionalAdmin = ar.findById(adminId);
@@ -107,18 +115,5 @@ public class UserService
         }
         if(ar.findByEmail(u.getEmail()).isPresent())
             throw new UserAlreadyExists("User with this email already exists");
-    }
-
-    public void resetAdminPassword(String code, String newRawPassword)
-    {
-        Optional<Admin> optionalAdmin = ar.findByverficationCode(code);
-        if(optionalAdmin.isEmpty())
-            throw new UsernameNotFoundException("no user with this id");
-        Admin admin = optionalAdmin.get();
-        admin.setPassword(passwordEncoder.encode(newRawPassword));
-        admin.setEnabled(true);
-        admin.setLocked(false);
-        admin.setVerficationCode(null);
-        ar.save(admin);
     }
 }

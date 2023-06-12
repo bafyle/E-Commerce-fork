@@ -1,20 +1,13 @@
 package com.vodafone.ecommerce.controller;
 
-import java.security.Principal;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.vodafone.ecommerce.model.Customer;
@@ -135,7 +128,7 @@ public class UserController
     @PostMapping("/password-reset")
     public String resetAdminPasswordPost(@ModelAttribute PasswordReset password)
     {
-        userService.resetAdminPassword(password.getAdminCode(), password.getPassword());
+        authService.resetAdminPassword(password.getAdminCode(), password.getPassword());
         return "password_reset_success";
     }
 }

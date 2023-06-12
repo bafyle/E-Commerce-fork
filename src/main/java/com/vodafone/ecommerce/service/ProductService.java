@@ -3,7 +3,6 @@ package com.vodafone.ecommerce.service;
 import com.vodafone.ecommerce.exception.DuplicateEntityException;
 import com.vodafone.ecommerce.exception.NotFoundException;
 import com.vodafone.ecommerce.model.Product;
-import com.vodafone.ecommerce.repository.CategoryRepo;
 import com.vodafone.ecommerce.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

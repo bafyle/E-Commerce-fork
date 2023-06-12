@@ -11,6 +11,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.vodafone.ecommerce.model.Admin;
@@ -36,6 +38,8 @@ public class AuthenticationService
     
     @Autowired
     JavaMailSender mailSender;
+
+    @Autowired PasswordEncoder passwordEncoder;
     
     private static String getCurrentUrl(HttpServletRequest request) throws URISyntaxException, MalformedURLException{
         URL url = new URL(request.getRequestURL().toString());
@@ -186,6 +190,19 @@ public class AuthenticationService
         user.setLocked(false);
         cr.save(user);
         return true;
+    }
+
+    public void resetAdminPassword(String code, String newRawPassword)
+    {
+        Optional<Admin> optionalAdmin = ar.findByverficationCode(code);
+        if(optionalAdmin.isEmpty())
+            throw new UsernameNotFoundException("no user with this id");
+        Admin admin = optionalAdmin.get();
+        admin.setPassword(passwordEncoder.encode(newRawPassword));
+        admin.setEnabled(true);
+        admin.setLocked(false);
+        admin.setVerficationCode(null);
+        ar.save(admin);
     }
 
 }
