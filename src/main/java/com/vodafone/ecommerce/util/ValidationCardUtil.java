@@ -1,4 +1,4 @@
-package com.vodafone.ecommerce.service;
+package com.vodafone.ecommerce.util;
 
 import com.vodafone.ecommerce.soap_consumer.ObjectFactory;
 import com.vodafone.ecommerce.soap_consumer.SoapClient;
@@ -7,11 +7,10 @@ import com.vodafone.ecommerce.soap_consumer.ValidateCardResponse;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Service;
 
-@Service
-public class ValidationCardService {
+public class ValidationCardUtil {
 
 
-    public boolean validateCard(String cardNumber, String pinNumber, String expirationMonth, String expirationYear){ // Month must be 2 digits (##)
+    public static boolean validateCard(String cardNumber, String pinNumber, String expirationMonth, String expirationYear){ // Month must be 2 digits (##)
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
         marshaller.setContextPath("com.vodafone.ecommerce.soap_consumer");
 
