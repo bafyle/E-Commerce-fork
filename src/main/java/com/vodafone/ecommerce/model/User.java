@@ -2,6 +2,7 @@ package com.vodafone.ecommerce.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Entity
@@ -23,6 +24,7 @@ public abstract class User
 
     private boolean enabled;
 
+    @NotBlank
     private String name;
 
     private String verficationCode;
