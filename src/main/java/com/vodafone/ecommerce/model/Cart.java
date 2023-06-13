@@ -1,12 +1,13 @@
 package com.vodafone.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "cart")
@@ -19,6 +20,11 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "cart")
-    private List<CartItem> cartItems;
+    //todo: consider PrimaryKeyJoinColumn
+    @OneToOne(mappedBy = "cart")
+    @JsonIgnore
+    private Customer customer;
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    private Set<CartItem> cartItems;
 }

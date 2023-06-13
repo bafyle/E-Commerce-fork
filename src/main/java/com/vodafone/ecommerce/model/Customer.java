@@ -7,7 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
+
 @Entity(name ="Customer")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,10 +18,10 @@ import java.util.List;
 public class Customer extends User
 {
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Address> addresses;
+    private Set<Address> addresses;
 
-    @OneToOne
-    @JoinColumn(name = "cart_id", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id", nullable = false, unique = true)
     private Cart cart;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

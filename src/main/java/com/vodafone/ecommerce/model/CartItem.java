@@ -21,8 +21,11 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
     @ManyToOne
-    @JoinColumn(name = "cart_id")
+    @JoinColumn(name = "cart_id", nullable = false)
     @JsonIgnore
     private Cart cart;
+
+    private Integer quantity;
 }

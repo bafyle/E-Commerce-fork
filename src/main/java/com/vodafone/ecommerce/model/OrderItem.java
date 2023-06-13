@@ -24,4 +24,6 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     @JsonIgnore
     private Order order;
+
+    private Integer rating;
 }
