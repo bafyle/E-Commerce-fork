@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Products Based (Pagination)</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+
+<!--    HOW TO GET AND USE AJAX ?-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js" type="text/javascript"t></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+
+            alert('Hello!!');
+            });
+        </script>
+
+</head>
+<body>
+<div class="container my-2" align="center">
+
+    <table style="width:80%" border="1"
+           class = "table table-striped table-responsive-md">
+        <thead>
+        <tr>
+            <th>Category</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="category:${all_categories}">
+            <td th:text="${category.name}">            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="input-group">
+        <div class="form-outline">
+            <input type="search" id="form1" class="form-control" />
+            <label class="form-label" for="form1">Search By Product Name</label>
+        </div>
+        <button id="search-button" type="button" class="btn btn-primary">
+            <i class="fas fa-search">Search</i>
+        </button>
+    </div>
+
+    <h3>Products (With Pagination)</h3>
+    <form method="post" >
+        <a th:href="@{/product}" class="btn btn-primary btn-sm mb-3" >
+        <input type="submit" value="">Add Product</a>
+    </form>
+    <table style="width:80%" border="1"
+           class = "table table-striped table-responsive-md">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Rating</th>
+            <th>Price</th>
+            <th>Image</th>
+            <th>Stock</th>
+            <th>Possible Actions For Product</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product:${all_products}">
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.category}"></td>
+            <td th:text="${product.rating}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.image}"></td>
+            <td th:text="${product.stock}"></td>
+            <td>
+                    <a th:href="@{/product/{id}(id=${product.id})}"
+                       class="btn btn-primary mx-3">
+                        <input type="submit" value="">View</a>
+
+                <form method="post" >
+                    <input type="hidden" name="_method" value="put"/>
+
+                    <a th:href="@{/product/{id}(id=${product.id})}"
+                       class="btn btn-secondary">
+                        <input type="submit" value="">Update</a>
+                </form>
+
+                <form method="post" >
+                    <input type="hidden" name="_method" value="delete"/>
+
+                    <a th:href="@{/product/{id}(id=${product.id})}"
+                       class="btn btn-danger">
+                        <input type="submit" value="">Delete</a>
+                </form>
+
+<!--                <a th:href="@{/deleteEmployee/{id}(id=${employee.id})}"-->
+<!--                   class="btn btn-danger">Delete</a>-->
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

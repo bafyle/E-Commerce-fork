@@ -26,7 +26,7 @@ public class Customer extends User
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Order> orders;
+    private Set<Order> orders;
 
     @Override
     public String getRole() {
