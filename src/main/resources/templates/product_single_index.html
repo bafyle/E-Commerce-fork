@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Products Based (Pagination)</title>
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+
+  <!--    HOW TO GET AND USE AJAX ?-->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js" type="text/javascript"t></script>
+  <script type="text/javascript">
+            $(document).ready(function(){
+
+            alert('Hello!!');
+            });
+        </script>
+
+</head>
+<body>
+<div th:object="${product}">
+
+  <div th:text="${product.name}"></div>
+  <div th:text="${product.category}"></div>
+  <div th:text="${product.rating}"></div>
+  <div th:text="${product.price}"></div>
+  <div th:text="${product.image}"></div>
+  <div th:text="${product.stock}"></div>
+  <div>
+    <button type="button" class="btn danger">Minus Quantity</button>
+
+    <div th:text="${product.stock}"></div>
+    <button type="button" class="btn btn-primary">Add Quantity</button>
+
+
+  </div>
+
+  <div>
+    <button type="button" class="btn btn-primary">Add To Cart</button>
+
+  </div>
+
+
+  <div>
+    <button type="button" class="btn btn-danger">Delete Product</button>
+  </div>
+
+
+  <div>
+    <button type="button" class="btn btn-secondary">Update Product</button>
+  </div>
+
+
+</div>
+</body>
+</html>

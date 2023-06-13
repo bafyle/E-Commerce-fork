@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <th:block th:replace="fragments/general.html :: header-files"/>
+    <title>Admin Products Management</title>
+</head>
+<body>
+<th:block th:replace="fragments/general.html :: admin-nav"/>
+<!-- Page content-->
+<div class="container p-6 pt-3">
+    <div class="d-flex justify-content-between mt-3 mb-4 p-2">
+        <h2>Product Management</h2>
+        <a class="btn btn-outline-dark align-middle" th:href="@{/admin/products/add}">Add Product</a>
+    </div>
+    <div class="table-responsive">
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="p-2 px-3 text-uppercase">Product</div>
+                </th>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="py-2 text-uppercase">Price</div>
+                </th>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="py-2 text-uppercase">Quantity</div>
+                </th>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="py-2 text-uppercase">Operations</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product :${products}">
+                <th class="border-0" scope="row">
+                    <div class="p-2">
+                        <img alt="" class="img-fluid rounded shadow-sm" th:src="${product.photoUrl}" width="150">
+                        <div class="ml-3 d-inline-block align-middle">
+                            <h5 class="mb-0"><span class="text-dark d-inline-block align-middle" th:text="${product.name}">Product NameOriginals</span></h5>
+                            <span class="text-muted font-weight-normal font-italic d-block" th:text="'Category: ' + ${product.category}">Category</span>
+                            <span class="text-muted font-weight-normal font-italic d-block" th:text="'Description: ' + ${product.description}">Description</span>
+                        </div>
+                    </div>
+                </th>
+                <td class="border-0 align-middle"><strong th:text="'$' + ${product.price}">Product Price</strong></td>
+                <td class="border-0 align-middle"><strong th:text="${product.stockQuantity}">Stock Quantity</strong>
+                </td>
+                <td class="border-0 align-middle">
+                    <a class="btn btn-outline-dark align-middle" th:href="@{/admin/products/{productId}/edit(productId=${product.id})}">Edit</a> |
+                    <a class="btn btn-outline-dark align-middle" th:href="@{/admin/products/{productId}/delete(productId=${product.id})}">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

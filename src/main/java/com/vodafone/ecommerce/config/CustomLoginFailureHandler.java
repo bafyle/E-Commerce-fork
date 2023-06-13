@@ -13,6 +13,7 @@ import com.vodafone.ecommerce.model.Customer;
 import com.vodafone.ecommerce.model.SecurityUser;
 import com.vodafone.ecommerce.repository.CustomerRepo;
 import com.vodafone.ecommerce.service.AuthenticationService;
+import com.vodafone.ecommerce.service.LoginService;
 import com.vodafone.ecommerce.service.UserService;
 
 import jakarta.servlet.ServletException;
@@ -23,14 +24,14 @@ import jakarta.servlet.http.HttpServletResponse;
 public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHandler
 {
     @Autowired
-    private AuthenticationService authService;
+    private LoginService loginService;
      
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException exception) throws IOException, ServletException
     {
         String email = request.getParameter("username");
-        authService.processLoginTry(email, request, response);
+        loginService.processLoginTry(email, request, response);
         String redirectUrl = request.getContextPath() + "/login-failed";
         response.sendRedirect(redirectUrl);
     }
