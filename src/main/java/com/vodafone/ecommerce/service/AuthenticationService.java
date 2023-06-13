@@ -7,13 +7,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Optional;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.vodafone.ecommerce.model.Admin;
 import com.vodafone.ecommerce.model.Customer;
 import com.vodafone.ecommerce.repository.AdminRepo;
 import com.vodafone.ecommerce.repository.CustomerRepo;
@@ -36,6 +38,8 @@ public class AuthenticationService
     
     @Autowired
     JavaMailSender mailSender;
+
+    @Autowired PasswordEncoder passwordEncoder;
     
     private static String getCurrentUrl(HttpServletRequest request) throws URISyntaxException, MalformedURLException{
         URL url = new URL(request.getRequestURL().toString());
@@ -62,6 +66,37 @@ public class AuthenticationService
                 + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
                 + "Thank you,<br>"
                 + "Your company name.";
+            
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+            
+        helper.setFrom(fromAddress, senderName);
+        helper.setTo(toAddress);
+        helper.setSubject(subject);
+            
+        content = content.replace("[[name]]", user.getEmail());
+        String verifyURL = getCurrentUrl(request) + "/verify?code=" + user.getVerficationCode();
+            
+        content = content.replace("[[URL]]", verifyURL);
+            
+        helper.setText(content, true);
+            
+        mailSender.send(message);
+    }
+
+    public void sendAdminVerficationEmail(Admin user, HttpServletRequest request) throws 
+        MessagingException,
+        UnsupportedEncodingException, MalformedURLException, URISyntaxException 
+    {
+        String toAddress = user.getEmail();
+        String fromAddress = EMAIL;
+        String senderName = "E-commerce";
+        String subject = "Please verify your registration";
+        String content = "Dear [[name]],<br>"
+                + "An admin has promoted you to be admin in e-commerce site, Click the following link to activate your email:<br>"
+                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                + "Thank you,<br>"
+                + "e-commerce.";
             
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -116,16 +151,15 @@ public class AuthenticationService
     public void processLoginTry(String email, HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         Optional<Customer> customer = cr.findByEmail(email);
-        var customerFromDB = customer.get();
         if(
-            customerFromDB == null 
-            || customerFromDB.isLocked()
-            || !customerFromDB.isEnabled()
+            customer.isEmpty() == true
+            || customer.get().isLocked()
+            || !customer.get().isEnabled()
             )
         {
-            // response.sendRedirect("/login-failed");
             return;
         }
+        var customerFromDB = customer.get();
         if(customerFromDB.getLoginTries() < 2)
         {
             customerFromDB.setLoginTries(customerFromDB.getLoginTries() + 1);
@@ -146,10 +180,8 @@ public class AuthenticationService
         cr.save(customerFromDB);
     }
     
-    
     public boolean verifyCustomer(String verificationCode) {
         Optional<Customer> optionalUser = cr.findByverficationCode(verificationCode);
-         
         if (optionalUser.isEmpty()) 
             return false;
         var user = optionalUser.get();
@@ -159,5 +191,19 @@ public class AuthenticationService
         cr.save(user);
         return true;
     }
+
+    public void resetAdminPassword(String code, String newRawPassword)
+    {
+        Optional<Admin> optionalAdmin = ar.findByverficationCode(code);
+        if(optionalAdmin.isEmpty())
+            throw new UsernameNotFoundException("no user with this id");
+        Admin admin = optionalAdmin.get();
+        admin.setPassword(passwordEncoder.encode(newRawPassword));
+        admin.setEnabled(true);
+        admin.setLocked(false);
+        admin.setVerficationCode(null);
+        ar.save(admin);
+    }
+
 }
 

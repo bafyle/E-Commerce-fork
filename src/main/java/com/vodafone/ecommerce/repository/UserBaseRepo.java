@@ -11,4 +11,6 @@ import com.vodafone.ecommerce.model.User;
 public interface UserBaseRepo<T extends User> extends JpaRepository<T, Long>
 {
     Optional<T> findByEmail(String email);
+
+    Optional<T> findByverficationCode(String code);
 }

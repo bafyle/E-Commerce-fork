@@ -16,7 +16,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -62,15 +61,35 @@ public class UserService
         return customerToReturn;
     }
 
-    public Admin createAdmin(Admin admin)
+    public Admin createAdmin(String adminEmail, HttpServletRequest request)
     {
+        var admin = new Admin();
+        admin.setEmail(adminEmail);
         checkIfUserExists(admin);
-        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        admin.setEnabled(false);
+        admin.setLocked(true);
+        admin.setVerficationCode(StringUtils.createRandomString(15));
+        admin.setPassword(StringUtils.createRandomString(10));
+        try {
+            authService.sendAdminVerficationEmail(admin, request);
+        } catch (UnsupportedEncodingException | MalformedURLException | MessagingException | URISyntaxException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         Admin adminToReturn = ar.save(admin);
         return adminToReturn;
     }
 
-    @Deprecated
+    public void deleteAdmin(Long adminId)
+    {
+        ar.deleteById(adminId);;
+    }
+
+    public void deleteAdmin(String email)
+    {
+        ar.deleteByEmail(email);
+    }
+
     public Admin updateAdmin(Long adminId, Admin adminNewData)
     {
         var optionalAdmin = ar.findById(adminId);

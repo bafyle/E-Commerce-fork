@@ -9,15 +9,14 @@ import lombok.Setter;
 
 import java.util.Set;
 
-@Entity
+@Entity(name ="Customer")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@PrimaryKeyJoinColumn(referencedColumnName="id")
 public class Customer extends User
 {
-    private String name;
-
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Address> addresses;
 
@@ -27,5 +26,10 @@ public class Customer extends User
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<Order> orders;
+    private List<Order> orders;
+
+    @Override
+    public String getRole() {
+        return "Customer";
+    }
 }

@@ -1,6 +1,5 @@
 package com.vodafone.ecommerce.model;
 
-import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,14 +21,9 @@ public class SecurityUser implements UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities()
     {
-        if(user instanceof Customer == true)
-        {
-            return new ArrayList<SimpleGrantedAuthority>(){{
-                add(new SimpleGrantedAuthority("Customer"));
-            }};
-        }
-        return new ArrayList<SimpleGrantedAuthority>(){{
-            add(new SimpleGrantedAuthority("Admin"));
+        return new ArrayList<SimpleGrantedAuthority>()
+        {{
+            add(new SimpleGrantedAuthority(user.getRole()));
         }};
     }
 
