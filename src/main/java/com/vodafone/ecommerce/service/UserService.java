@@ -39,7 +39,7 @@ public class UserService
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Autowired AuthenticationService authService;
+    @Autowired MailService mailService;
 
     // Customer registeration
     public Customer registerCustomer(Customer customer, HttpServletRequest request)
@@ -53,7 +53,7 @@ public class UserService
         customer.setCart(cartFromDB);
         Customer customerToReturn = cr.save(customer);
         try {
-            authService.sendVerificationEmail(customerToReturn, request);
+            mailService.sendVerificationEmail(customerToReturn, request);
         } catch (UnsupportedEncodingException | MalformedURLException | MessagingException | URISyntaxException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -71,7 +71,7 @@ public class UserService
         admin.setVerficationCode(StringUtils.createRandomString(15));
         admin.setPassword(StringUtils.createRandomString(10));
         try {
-            authService.sendAdminVerficationEmail(admin, request);
+            mailService.sendAdminVerficationEmail(admin, request);
         } catch (UnsupportedEncodingException | MalformedURLException | MessagingException | URISyntaxException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
