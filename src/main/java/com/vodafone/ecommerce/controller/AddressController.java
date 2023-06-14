@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-@RestController
+//@RestController
 @RequestMapping("/customer/{customerId}/address")
 @PreAuthorize("hasAuthority('Customer')")
 public class AddressController {
