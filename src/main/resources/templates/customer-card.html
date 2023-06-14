@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Card Details</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+            <h1 class="text-center">Insert Your Card Details</h1>
+            <div class="card-body">
+                <form th:action="@{/customer/{customerId}/order/card(customerId=${customerId})}"
+                      th:object="${card}"
+                      method="post">
+
+                    <div class="form-group">
+
+                        <label>Card Number</label>
+                        <input type="text"
+                               name="cardNumber"
+                               th:field="*{cardNumber}"
+                               class="form-control"
+                               placeholder="Enter Card Number"/>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>PIN Number</label>
+                        <input type="text"
+                               name="pinNumber"
+                               th:field="*{pinNumber}"
+                               class="form-control"
+                               placeholder="Enter Card PIN"/>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Card Expiration Month</label>
+                        <input type="text"
+                               name="expirationMonth"
+                               th:field="*{expirationMonth}"
+                               class="form-control"
+                               placeholder="Enter Card expiration Month"/>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Card expiration Year</label>
+                        <input type="text"
+                               name="expirationYear"
+                               th:field="*{expirationYear}"
+                               class="form-control"
+                               placeholder="Enter Card expiration Year"/>
+                    </div>
+
+
+
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn=primary">
+                            Submit
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

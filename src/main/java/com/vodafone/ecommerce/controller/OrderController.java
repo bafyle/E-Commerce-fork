@@ -19,7 +19,7 @@ import java.util.List;
 // Card Number Page
 
 @RestController
-@RequestMapping("customer/{customerId}/order")
+@RequestMapping("/customer/{customerId}/order")
 @PreAuthorize("hasAuthority('Customer')")
 
 public class OrderController {
@@ -50,7 +50,7 @@ public class OrderController {
     public ResponseEntity<Order> checkoutCart(@PathVariable("customerId") Long customerId,
                                               @AuthenticationPrincipal SecurityUser user) {
         AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
-        return new ResponseEntity<>(orderService.checkoutCart(customerId), HttpStatus.CREATED);
+        return new ResponseEntity<>(/*orderService.checkoutCart(customerId)*/null, HttpStatus.CREATED);
     }
 
     @PutMapping("/{orderId}")
