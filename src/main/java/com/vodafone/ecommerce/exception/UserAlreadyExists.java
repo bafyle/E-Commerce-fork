@@ -3,7 +3,7 @@ package com.vodafone.ecommerce.exception;
 import org.springframework.http.HttpStatus;
 
 
-public class UserAlreadyExists extends APIException
+public class UserAlreadyExists extends MVCException
 {
 
     public UserAlreadyExists(String message)
@@ -14,5 +14,4 @@ public class UserAlreadyExists extends APIException
     public HttpStatus getStatus() {
         return HttpStatus.CONFLICT;
     }
-
 }

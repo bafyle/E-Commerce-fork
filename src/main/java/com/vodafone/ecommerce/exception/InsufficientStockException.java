@@ -2,7 +2,7 @@ package com.vodafone.ecommerce.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class InsufficientStockException extends APIException{
+public class InsufficientStockException extends MVCException {
     public InsufficientStockException(String message) {
         super(message);
     }
