@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @Controller
-@RequestMapping("/customer/{customerId}/order/cash")
+@RequestMapping("/customer/{customerId}/order/address")
 @PreAuthorize("hasAuthority('Customer')")
 public class CashController {
 
