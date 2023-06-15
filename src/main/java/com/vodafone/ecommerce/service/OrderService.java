@@ -59,12 +59,14 @@ public class OrderService {
 
         Order order = new Order();
         order.setOrderItems(new HashSet<>());
-
-        cartItems.forEach(cartItem -> {
-            boolean quantityOrderIsSmallerOrEqualsThanStock = cartItem.getQuantity() <= productService.getProductById(cartItem.getProduct().getId()).getStock();
-            if (cartItem.getProduct().getIsArchived()) {
-                throw new InsufficientStockException("Product not available");
+        for (CartItem cartItem:
+              cartItems) {
+          if (cartItem.getProduct().getIsArchived()) {
+                continue;
             }
+          
+            boolean quantityOrderIsSmallerOrEqualsThanStock = cartItem.getQuantity() <= productService.getProductById(cartItem.getProduct().getId()).getStock();
+            
 
             if (!quantityOrderIsSmallerOrEqualsThanStock)
             {
@@ -78,9 +80,8 @@ public class OrderService {
             orderItem.setProduct(cartItem.getProduct());
 
             order.getOrderItems().add(orderItem);
-        });
+        }
 
-        // TODO: PAYMENT IS HANDLED! (Remove this TODO, I am just keeping it for u to see it, Osama)
         boolean isValidCard = ValidationCardUtil.validateCard(card.getCardNumber(),card.getPinNumber(),card.getExpirationMonth(),card.getExpirationYear());
         if (!isValidCard)
             throw new InvalidCardException("Wrong Card Credential");

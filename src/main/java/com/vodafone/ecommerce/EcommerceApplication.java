@@ -14,9 +14,6 @@ public class EcommerceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(EcommerceApplication.class, args);
 
-
-
-
 	//	 Testing Rest API - Works fine
 
 //        ValidationCardUtil.validateCard("1111111111111111", "1234", "01", "2024");
@@ -52,8 +49,5 @@ public class EcommerceApplication {
 //        System.out.println("True: " +
 //                PaymentUtil.canFulfilOrder(new PaymentRequest("1111111111111111", 1D)));
 
-
-
 	}
-
 }

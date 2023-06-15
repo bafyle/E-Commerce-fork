@@ -83,8 +83,6 @@ public class ProductService {
         product.get().setIsArchived(true);
 
         productRepo.save(product.get());
-
-        cartItemService.deleteAllCartItemsByProductId(id);
     }
 
     public void updateProductRating(Long id, Double productRating) {
