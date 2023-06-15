@@ -32,6 +32,15 @@ public class CategoryService {
         return category.get();
     }
 
+    public Category getCategoryByNameIgnoreCases(String name)
+    {
+        Optional<Category> category = categoryRepo.findByNameContainsIgnoreCase(name);
+        if (category.isEmpty()) {
+            throw new NotFoundException("Category with this name not found.");
+        }
+        return category.get();
+    }
+
     public Category addCategory(Category category) {
         if (categoryRepo.findByName(category.getName()).isPresent()) {
             throw new DuplicateEntityException("Category with same name already exists.");

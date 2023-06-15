@@ -16,6 +16,22 @@
     <div class="d-flex justify-content-between mt-3 mb-4 p-2">
         <h2>Product Management</h2>
         <a class="btn btn-outline-dark align-middle" th:href="@{/product/add}">Add Product</a>
+        <form th:action="@{/product/search}" method="post" id="search-form">
+            <label for="product-search-input">Search for a product</label>
+            <input type="search" name="product-search" id="product-search-input">
+
+            <div id="search-type">
+                <label for="product-category-search">Category</label>
+                <input class="radio-button-search-type" type="radio" name="product-type" id="product-category-search" value="category">
+                
+                <label for="product-name-search">Name</label>
+                <input class="radio-button-search-type" type="radio" name="product-type" id="product-name-search" value="name" checked>
+            </div>
+            <input type="submit" value="Search">
+        </form>
+        <form th:action="@{/product}" method="get">
+            <input type="submit" value="Reset">
+        </form>
     </div>
     <div class="table-responsive">
 
@@ -67,5 +83,20 @@
         </table>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script>
+    $(function()
+    {
+        let $searchFrom = $("#search-form");
+        $searchFrom.submit(function(e)
+        {
+            let searchBy = $('input[name="product-type"]:checked').val();
+            let searchValue = $("#product-search-input").val();
+            let urlWithQueryParams = $searchFrom.attr("action")
+                + "?searchBy=" + searchBy + "&searchValue="+searchValue;
+            $searchFrom.attr("action", urlWithQueryParams);
+        })
+    });
+</script>89
 </body>
 </html>

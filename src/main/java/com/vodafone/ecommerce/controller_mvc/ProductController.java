@@ -6,6 +6,7 @@ import com.vodafone.ecommerce.service.CategoryService;
 import com.vodafone.ecommerce.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,7 +48,7 @@ public class ProductController {
         p1.setImage("img");
         p1.setPrice(4D);
         p1.setStock(50);
-        p1.setCategory(categoryService.getCategoryById(3L));
+        // p1.setCategory(categoryService.getCategoryById(3L));
 
      //   productService.addProduct(p1);
 
@@ -65,6 +66,27 @@ public class ProductController {
         Product product = productService.getProductById(id);
         model.addAttribute("product", product);
         return "admin-productDetailsWithAdminOptions";
+    }
+    @PostMapping(value="/search")
+    @PreAuthorize("hasAnyAuthority('Admin','Customer')")
+    public String searchForProduct(
+        @RequestParam(value="searchBy") String searchType, 
+        @RequestParam(value="searchValue") String searchValue,
+        Model model)
+    {
+        List<Product> allProducts = null;
+        if(searchType.equals("category"))
+        {
+            var cat = categoryService.getCategoryByNameIgnoreCases(searchValue);
+            allProducts = productService.getAllProducts(0, 100, null, cat.getId());
+        }
+        else
+        {
+            allProducts = productService.getAllProducts(0, 100, searchValue, null);
+        }
+        model.addAttribute("all_products", allProducts);
+        
+        return "admin-productsRead";
     }
 
     @GetMapping("/add")
