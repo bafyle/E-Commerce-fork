@@ -2,7 +2,7 @@ package com.vodafone.ecommerce.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class EmptyCartException extends APIException{
+public class EmptyCartException extends MVCException {
     public EmptyCartException(String message) {
         super(message);
     }

@@ -1,23 +1,28 @@
 package com.vodafone.ecommerce.exception;
 
 import com.vodafone.ecommerce.model.ErrorDetails;
-import org.springframework.beans.TypeMismatchException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(APIException.class)
-    public ResponseEntity<ErrorDetails> handleApiException(APIException apiException ){
-        ErrorDetails errorDetails = new ErrorDetails();
-        errorDetails.setCode(apiException.getStatus().getReasonPhrase());
-        errorDetails.setMessage(apiException.getMessage());
-        return new ResponseEntity<>(errorDetails, apiException.getStatus());
+public class MVCExceptionHandler extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(MVCException.class)
+    public ModelAndView handleApiException(MVCException mvcException, WebRequest request){
+//        ErrorDetails errorDetails = new ErrorDetails();
+//        errorDetails.setCode(mvcException.getStatus().getReasonPhrase());
+//        errorDetails.setMessage(mvcException.getMessage());
+
+        ModelAndView modelAndView =  new ModelAndView(mvcException.getView());
+        modelAndView.addObject("errorTitle", "An error has occured");
+        modelAndView.addObject("errorStatus", mvcException.getStatus().getReasonPhrase());
+        modelAndView.addObject("errorMessage", mvcException.getMessage());
+        modelAndView.setStatus(mvcException.getStatus());
+
+        return modelAndView;
     }
 
 //    @Override TODO: Why Does It Exist?
