@@ -13,10 +13,19 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="error-template">
+            <div th:if="${errorTitle != null}" class="error-template">
                 <h1 th:text="${errorTitle}"></h1>
                 <h2 th:text="${errorStatus}"></h2>
                 <div class="error-details" th:text="${errorMessage}"></div>
+                <div class="error-actions">
+                    <a th:href="@{/}" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-home"></span>
+                        Take Me Home </a>
+                </div>
+            </div>
+            <div th:if="${errorTitle == null}" class="error-template">
+                <h1>An error has occured</h1>
+                <h2>Page Not Found</h2>
+                <div class="error-details">This page does not exist</div>
                 <div class="error-actions">
                     <a th:href="@{/}" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-home"></span>
                         Take Me Home </a>
