@@ -34,8 +34,11 @@ public class Cart {
         double sum = 0;
         for (CartItem cartItem:
              cartItems) {
+            if (cartItem.getProduct().getIsArchived()) {
+                continue;
+            }
             sum += (cartItem.getQuantity()*cartItem.getProduct().getPrice());
-        };
+        }
         return sum;
     }
 }

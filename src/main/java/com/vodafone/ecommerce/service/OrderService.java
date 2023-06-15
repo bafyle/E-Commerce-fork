@@ -60,9 +60,10 @@ public class OrderService {
         Order order = new Order();
         order.setOrderItems(new HashSet<>());
 
-        cartItems.forEach(cartItem -> {
+        for (CartItem cartItem:
+              cartItems) {
             if (cartItem.getProduct().getIsArchived()) {
-                throw new InsufficientStockException("Product not available");
+                continue;
             }
 
             OrderItem orderItem = new OrderItem();
@@ -71,7 +72,7 @@ public class OrderService {
             orderItem.setProduct(cartItem.getProduct());
 
             order.getOrderItems().add(orderItem);
-        });
+        }
 
         // TODO: handle payment
 
