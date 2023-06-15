@@ -25,10 +25,10 @@
 
     </div>
 
-    <div class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered">
         <thead class="table-dark">
             <tr>
-                <th>Admin Full Name</th>
+                <th>Admin Name</th>
                 <th>Admin Email</th>
                 <th>Admin Password</th>
                 <th>Admin Actions</th>
@@ -40,12 +40,16 @@
             <td th:text="${admin.name}"></td>
             <td th:text="${admin.email}"></td>
             <td th:text="${admin.password}"></td>
-            <td ></td>
+            <td >
+                <a class="btn btn-primary" th:href="@{/admin/{id}/edit(id=${admin.id})}">Edit</a>
+                <a class="btn btn-secondary" th:href="@{/admin/{id}/delete(id=${admin.id})}">Delete</a>
+
+            </td>
         </tr>
         </tbody>
 
 
-    </div>
+    </table>
 
 
 </div>

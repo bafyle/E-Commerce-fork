@@ -16,7 +16,7 @@ import java.util.List;
 // Add Product - Admin
 // CartList
 
-@RestController
+//@RestController
 @RequestMapping("/product")
 @PreAuthorize("hasAuthority('Admin')")
 public class ProductController {

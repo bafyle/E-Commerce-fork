@@ -1,10 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Edit Email</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+
 </head>
 <body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+            <h1 class="text-center">Edit Email</h1>
+            <div class="card-body">
+                <form th:action="@{/customer/{customerId}/account/settings/edit/email (customerId=${customer.id})}" th:object="${customer}" method="post">
+                    <div class="form-group">
 
+                        <label>Change Email</label>
+                        <input type="text"
+                               name="email"
+                               th:field="*{email}"
+                               value="*{email}"
+                               class="form-control"
+                               placeholder="Enter a new email"/>
+                    </div>
+                    <input hidden="hidden" class="form-control" id="id" name="id" placeholder="id" th:field="*{id}">
+                    <input hidden="hidden" class="form-control" id="name" name="name" placeholder="name" th:field="*{name}">
+                    <input hidden="hidden" class="form-control" id="password" name="password" placeholder="password" th:field="*{password}">
+
+
+
+
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn=primary">
+                            Submit
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

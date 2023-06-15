@@ -20,7 +20,7 @@ import java.util.List;
 // Assign New Admin
 // View All Admins - Admin
 
-@RestController
+//@RestController
 @RequestMapping("/admin")
 @PreAuthorize("hasAuthority('Admin')")
 public class AdminController {

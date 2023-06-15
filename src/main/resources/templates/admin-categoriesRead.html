@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>(All Available Categories)</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+
+</head>
+<body>
+
+<div class="container ">
+
+    <div class="row">
+        <h1>List Of Categories (All Available Admins)</h1>
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-3">
+            <a th:href="@{/category/add}" class="btn btn-primary">Add Category</a>
+        </div>
+
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>Category ID</th>
+            <th>Category Name</th>
+            <th>Admin Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="category: ${all_categories}">
+            <td th:text="${category.id}"></td>
+            <td th:text="${category.name}"></td>
+            <td >
+                <a class="btn btn-primary" th:href="@{/category/{id}/edit(id=${category.id})}">Edit</a>
+                <a class="btn btn-secondary" th:href="@{/category/{id}/delete(id=${category.id})}">Delete</a>
+
+            </td>
+        </tr>
+        </tbody>
+
+
+    </table>
+
+
+</div>
+
+
+</body>
+</html>

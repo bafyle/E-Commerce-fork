@@ -1,10 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Products Based (Pagination)</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+
 </head>
 <body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+            <h1 class="text-center">Edit Admin</h1>
+            <div class="card-body">
+                <form th:action="@{/admin/{id}/edit (id=${admin.id})}" th:object="${admin}" method="post">
+                    <div class="form-group">
 
+                        <label>Admin Full Name</label>
+                        <input type="text"
+                               name="name"
+                               th:field="*{name}"
+                               value="*{name}"
+                               class="form-control"
+                               placeholder="Enter a name For Admin"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input hidden="hidden" class="form-control" id="id" name="id" placeholder="id" th:field="*{id}">
+                        <input hidden="hidden" class="form-control"
+                               id="password" name="password"
+                               placeholder="password" th:field="*{password}">
+                        <input hidden="hidden" class="form-control" id="enabled" name="enabled"
+                               placeholder="enabled" th:field="*{enabled}">
+                        <input hidden="hidden" class="form-control" id="verficationCode" name="verficationCode"
+                               placeholder="verficationCode" th:field="*{verficationCode}">
+                        <input hidden="hidden" class="form-control" id="loginTries" name="loginTries"
+                               placeholder="loginTries" th:field="*{loginTries}">
+                        <input hidden="hidden" class="form-control" id="locked" name="locked"
+                               placeholder="locked" th:field="*{locked}">
+
+                        <label hidden="hidden">Admin Email</label>
+                        <input hidden="hidden"
+                               type="text"
+                               name="email"
+                               th:field="*{email}"
+                               class="form-control"
+                               placeholder="Enter an email For Admin"/>
+                    </div>
+
+
+
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn=primary">
+                            Submit
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>
