@@ -1,10 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"  xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Product Details</title>
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
 </head>
 <body>
 
+<div class="container p-6 pt-3">
+    <div class="d-flex justify-content-between mt-3 mb-4 p-2">
+        <h2>Product Management</h2>
+        <a class="btn btn-outline-dark align-middle"
+           th:href="@{/product}">Return</a>
+    </div>
+    <div class="table-responsive">
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="p-2 px-3 text-uppercase">Product</div>
+                </th>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="py-2 text-uppercase">Price</div>
+                </th>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="py-2 text-uppercase">Quantity</div>
+                </th>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="py-2 text-uppercase">Is Archived?</div>
+                </th>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="py-2 text-uppercase">Image</div>
+                </th>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="py-2 text-uppercase">Rating</div>
+                </th>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="py-2 text-uppercase">Category</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:object="${product}">
+                <th class="border-0" scope="row">
+                    <div class="p-2">
+                        <img alt="" class="img-fluid rounded shadow-sm" th:src="${product.image}" width="150">
+                        <div class="ml-3 d-inline-block align-middle">
+                            <h5 class="mb-0"><span class="text-dark d-inline-block align-middle" th:text="${product.name}">Product NameOriginals</span></h5>
+                            <span class="text-muted font-weight-normal font-italic d-block" th:text="'Category: ' + ${product.category}">Category</span>
+                        </div>
+                    </div>
+                </th>
+                <td class="border-0 align-middle"><strong th:text="'$' + ${product.price}">Product Price</strong></td>
+                <td class="border-0 align-middle"><strong th:text="${product.stock}">Stock Quantity</strong>
+                <td class="border-0 align-middle">
+                    <strong th:text="${product.isArchived}">Is Archived?</strong>
+                </td>
+                <td class="border-0 align-middle">
+                    <strong th:text="${product.image}">Image</strong>
+                </td>
+                <td class="border-0 align-middle">
+                    <strong th:text="${product.rating}">Rating: </strong>
+                </td>
+                <td class="border-0 align-middle">
+                    <strong th:text="${product.category.name}">Category: ?</strong>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>

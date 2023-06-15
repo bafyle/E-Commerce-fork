@@ -2,6 +2,7 @@ package com.vodafone.ecommerce.service;
 
 import com.vodafone.ecommerce.exception.DuplicateEntityException;
 import com.vodafone.ecommerce.exception.NotFoundException;
+import com.vodafone.ecommerce.exception.UserAlreadyExists;
 import com.vodafone.ecommerce.model.Cart;
 import com.vodafone.ecommerce.model.Customer;
 import com.vodafone.ecommerce.repository.CustomerRepo;
@@ -49,6 +50,11 @@ public class CustomerService {
 
         if (customerById.isEmpty()) {
             throw new NotFoundException("Customer id not found.");
+        }
+
+        if (customerRepo.findByEmail(customer.getEmail()).isEmpty())
+        {
+            throw new UserAlreadyExists("Choose Different Email Address");
         }
         // TODO: limit email change?
         customer.setId(id);

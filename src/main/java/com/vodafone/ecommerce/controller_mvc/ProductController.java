@@ -6,6 +6,7 @@ import com.vodafone.ecommerce.service.CategoryService;
 import com.vodafone.ecommerce.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,8 +19,9 @@ import java.util.List;
 // Add Product - Admin
 // CartList
 
-//@Controller
+@Controller
 @RequestMapping("/product")
+@PreAuthorize("hasAuthority('Admin')")
 public class ProductController {
 
     private final ProductService productService;
@@ -33,34 +35,43 @@ public class ProductController {
 
     //TODO: page size according to spring profile?
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('Admin','Customer')")
     public String getAllProducts(
             @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
             @RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "category", required = false) Long categoryId, Model model) { //TODO: cat_id?
+
+        Product p1 = new Product();
+        p1.setName("Product Dummy #1");
+        p1.setImage("img");
+        p1.setPrice(4D);
+        p1.setStock(50);
+        p1.setCategory(categoryService.getCategoryById(3L));
+
+     //   productService.addProduct(p1);
+
+
         List<Product> allProducts = productService.getAllProducts(page, size, name, categoryId);
         List<Category> allCatgories = categoryService.getAllCategories();
-        model.addAttribute("product_index");
         model.addAttribute("all_products", allProducts);
         model.addAttribute("all_categories", allCatgories);
-//        ModelAndView modelAndView = new ModelAndView("product_index");
-//        modelAndView.addObject("all_products",allProducts);
-//        modelAndView.addObject("all_categories",allCatgories);
-        return "product_index";
+        return "admin-productsRead";
     }
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAnyAuthority('Admin','Customer')")
     public String getProductById(@PathVariable(name = "id") Long id, Model model) {
         Product product = productService.getProductById(id);
         model.addAttribute("product", product);
-        return "product_single_index";
+        return "admin-productDetailsWithAdminOptions";
     }
 
     @GetMapping("/add")
     public String addProduct(Model model) {
         Product product = new Product();
         model.addAttribute("product", product);
-        return "admin-addProduct";
+        return "admin-productCreate";
     }
 
     @PostMapping("/add")
@@ -70,12 +81,12 @@ public class ProductController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("product", product);
             model.addAttribute("all_categories",allCategories);
-            return "admin-addProduct";
+            return "admin-productCreate";
         }
 
 
         productService.addProduct(product);
-        return "redirect:/admin/products";
+        return "redirect:/product";
     }
 
     //
@@ -83,7 +94,7 @@ public class ProductController {
     public String updateProduct(@PathVariable("id") Long productId, Model model) {
         Product product = productService.getProductById(productId);
         model.addAttribute("product", product);
-        return "admin-editProduct";
+        return "admin-productEdit";
     }
 
     @PostMapping("/{id}/edit")
@@ -91,14 +102,14 @@ public class ProductController {
                                 BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("product", product);
-            return "admin-editProduct";
+            return "admin-productEdit";
         }
         productService.updateProduct(product, productId);
-        return "redirect:/" + productId + "/products";
+        return "redirect:/" + productId + "/product";
     }
 
-    @DeleteMapping(value = "/{id}/delete")
-    public String deleteProduct(@PathVariable(name = "id") Long id, Model model) {
+    @GetMapping(value = "/{id}/delete")
+    public String deleteProduct(@PathVariable(name = "id") Long id) {
         productService.deleteProduct(id);
         return "redirect:/product";
     }

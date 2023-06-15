@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>(All Available Addresses for you)</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+
+</head>
+<body>
+
+<div class="container ">
+
+    <div class="row">
+        <h1>List Of Current Customer Address </h1>
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-3">
+            <a th:href="@{/customer/{id}/address/add(id=${customerId})}" class="btn btn-primary">Add Address</a>
+        </div>
+
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>Address ID</th>
+            <th>Address Name</th>
+            <th>Address Customer</th>
+            <th>Admin Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="address: ${all_addresses}">
+            <td th:text="${address.id}"></td>
+            <td th:text="${address.address}"></td>
+            <td th:text="${address.customer.name}"></td>
+            <td >
+                <a class="btn btn-primary" th:href="@{/customer/{customerId}/address/{id}/edit(id=${address.id},customerId=${customerId})}">Edit</a>
+                <a class="btn btn-secondary" th:href="@{/customer/{customerId}/address/{id}/delete(id=${address.id},customerId=${customerId})}">Delete</a>
+
+            </td>
+        </tr>
+        </tbody>
+
+
+    </table>
+
+
+</div>
+
+
+</body>
+</html>

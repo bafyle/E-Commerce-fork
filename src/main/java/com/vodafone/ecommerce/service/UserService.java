@@ -102,6 +102,13 @@ public class UserService
         }
         Admin newAdmin = new Admin();
         // set newAdmin data from adminNewData and save newAdminData
+        newAdmin.setId(adminNewData.getId());
+        newAdmin.setName(adminNewData.getName());
+        newAdmin.setPassword(adminNewData.getPassword());
+        newAdmin.setEmail(adminNewData.getEmail());
+        newAdmin.setEnabled(adminNewData.isEnabled());
+        newAdmin.setLoginTries(adminNewData.getLoginTries());
+        newAdmin.setVerficationCode(adminNewData.getVerficationCode());
         return ar.save(newAdmin);
     }
 
