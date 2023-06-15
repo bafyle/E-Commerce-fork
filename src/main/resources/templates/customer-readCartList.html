@@ -31,6 +31,10 @@
                 <th class="border-0 bg-light" scope="col">
                     <div class="py-2 text-uppercase">Rating</div>
                 </th>
+
+                <th class="border-0 bg-light" scope="col">
+                    <div class="py-2 text-uppercase">Quantity</div>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -48,6 +52,17 @@
                 <td class="border-0 align-middle"><strong th:text="${cartItem.product.rating}">Rating</strong>
                 <td class="border-0 align-middle"><strong th:text="${cartItem.product.isArchived}">Is Available?</strong>
                 </td>
+
+                                <td class="border-0 align-middle">
+                                    <div class="row">
+                                        <form method="post" th:action="@{/customer/{customerId}/cart/{cartItemId}/update(productId=${productId}, cartItemId=${cartItem.id})}" th:object="${cartItem}" >
+                                            <input class="form-control" id="quantity" name="quantity" value="${cartItem.quantity}"
+                                                   placeholder="Product Quantity" th:field="${cartItem.quantity}" type="number">
+                                        <button class="btn btn-primary" type="submit">Update</button>
+                                        </form>
+                                    </div>
+                </td>
+
                 <td class="border-0 align-middle">
                     <a class="btn btn-primary align-middle"
                        th:href="@{/product/{productId}(productId=${product.id})}">View</a>
