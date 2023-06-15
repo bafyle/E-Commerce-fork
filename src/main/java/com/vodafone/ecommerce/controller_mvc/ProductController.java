@@ -67,13 +67,6 @@ public class ProductController {
         model.addAttribute("product", product);
         return "admin-productDetailsWithAdminOptions";
     }
-    @GetMapping(value="/search")
-    @PreAuthorize("hasAnyAuthority('Admin','Customer')")
-    public String searchForProduct()
-    {
-        return "admin-productsSearch";
-    }
-
     @PostMapping(value="/search")
     @PreAuthorize("hasAnyAuthority('Admin','Customer')")
     public String searchForProduct(
@@ -93,7 +86,7 @@ public class ProductController {
         }
         model.addAttribute("all_products", allProducts);
         
-        return "admin-productsSearch";
+        return "admin-productsRead";
     }
 
     @GetMapping("/add")
