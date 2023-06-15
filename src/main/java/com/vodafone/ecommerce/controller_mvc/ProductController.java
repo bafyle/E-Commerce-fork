@@ -93,6 +93,7 @@ public class ProductController {
     public String addProduct(Model model) {
         Product product = new Product();
         model.addAttribute("product", product);
+        model.addAttribute("all_categories",categoryService.getAllCategories());
         return "admin-productCreate";
     }
 
@@ -116,6 +117,7 @@ public class ProductController {
     public String updateProduct(@PathVariable("id") Long productId, Model model) {
         Product product = productService.getProductById(productId);
         model.addAttribute("product", product);
+        model.addAttribute("all_categories",categoryService.getAllCategories());
         return "admin-productEdit";
     }
 
