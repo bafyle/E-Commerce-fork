@@ -11,27 +11,27 @@
                 </li>
                 <!-- Admin links -->
                 <li sec:authorize="hasAuthority('Admin')" class="nav-item">
-                    <a class="nav-link" href="#">Manage Categories</a>
+                    <a class="nav-link" th:href="@{/category}">Manage Categories</a>
                 </li>
                 <li sec:authorize="hasAuthority('Admin')" class="nav-item">
-                    <a class="nav-link" href="#">Manage products</a>
+                    <a class="nav-link" th:href="@{/product}">Manage products</a>
                 </li>
                 <li sec:authorize="hasAuthority('Admin')" class="nav-item">
-                    <a class="nav-link" href="#">Manage Admins</a>
+                    <a class="nav-link" th:href="@{/admin}">Manage Admins</a>
                 </li>
 
                 <!-- Customer links -->
                 <li sec:authorize="hasAuthority('Customer')" class="nav-item">
-                    <a class="nav-link" href="#">Order History</a>
+                    <a class="nav-link" th:href="@{/customer/{customerId}/order(customerId=${customerId})}">Order History</a>
                 </li>
                 <li sec:authorize="hasAuthority('Customer')" class="nav-item">
-                    <a class="nav-link" href="#">Cart List</a>
+                    <a class="nav-link" th:href="@{/customer/{customerId}/cart(customerId=${customerId})}">Cart List</a>
                 </li>
                 <li sec:authorize="hasAuthority('Customer')" class="nav-item">
-                    <a class="nav-link" href="#">Settings</a>
+                    <a class="nav-link" th:href="@{/customer/{customerId}/account/settings(customerId=${customerId})}">Settings</a>
                 </li>
                 <li sec:authorize="hasAuthority('Customer')" class="nav-item">
-                    <a class="nav-link" href="#">My Addresses</a>
+                    <a class="nav-link" th:href="@{/customer/{customerId}/address(customerId=${customerId})}">My Addresses</a>
                 </li>
                 <!-- Logout -->
                 <li class="nav-item">

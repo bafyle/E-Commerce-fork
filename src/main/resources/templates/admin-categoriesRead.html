@@ -36,7 +36,7 @@
         <tr th:each="category: ${all_categories}">
             <td th:text="${category.id}"></td>
             <td th:text="${category.name}"></td>
-            <td >
+            <td sec:authorize="hasAuthority('Admin')" >
                 <a class="btn btn-primary" th:href="@{/category/{id}/edit(id=${category.id})}">Edit</a>
                 <a class="btn btn-secondary" th:href="@{/category/{id}/delete(id=${category.id})}">Delete</a>
 
