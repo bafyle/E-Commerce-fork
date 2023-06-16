@@ -1,14 +1,15 @@
 package com.vodafone.ecommerce.controller_mvc;
 
-import com.vodafone.ecommerce.model.CartItem;
 import com.vodafone.ecommerce.model.Category;
 import com.vodafone.ecommerce.model.Product;
+import com.vodafone.ecommerce.model.SecurityUser;
+import com.vodafone.ecommerce.model.dto.CartItemDTO;
 import com.vodafone.ecommerce.service.CategoryService;
 import com.vodafone.ecommerce.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -63,10 +64,14 @@ public class ProductController {
 
     @GetMapping(value = "/{id}")
     @PreAuthorize("hasAnyAuthority('Admin','Customer')")
-    public String getProductById(@PathVariable(name = "id") Long id, Model model) {
+    public String getProductById(@PathVariable(name = "id") Long id, @AuthenticationPrincipal SecurityUser user, Model model) {
         Product product = productService.getProductById(id);
+        CartItemDTO cartItemDTO = new CartItemDTO();
+        cartItemDTO.setProductId(id);
+        cartItemDTO.setQuantity(1);
         model.addAttribute("product", product);
-        model.addAttribute("cartItem", new CartItem());
+        model.addAttribute("customerId", user.getUser().getId());
+        model.addAttribute("cartItem", cartItemDTO);
         return "admin-productDetailsWithAdminOptions";
     }
     @PostMapping(value="/search")

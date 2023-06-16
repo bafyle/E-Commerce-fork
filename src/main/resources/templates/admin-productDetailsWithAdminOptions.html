@@ -70,11 +70,13 @@
     </div>
 </div>
 
-<form method="post" th:action="@{/customer/{customerId}/cart(customerId=${customerId})}" th:object="${cartItem}" >
-    <input class="form-control" id="quantity" name="quantity" value="1"
+<form method="post"
+      th:action="@{/customer/{customerId}/cart(customerId=${customerId})}"
+      th:object="${cartItem}">
+    <input class="form-control" id="quantity" name="quantity" value="${cartItem.quantity}"
            placeholder="Product Quantity" th:field="${cartItem.quantity}" type="number">
-    <input hidden="hidden" id="product" name="product" value="${product}"
-    th:object="${product}">
+    <input hidden="hidden" id="productId" name="productId" value="${cartItem.productId}"
+            placeholder="Product ID" th:field="${cartItem.productId}" type="number">
     <button class="btn btn-primary" type="submit">Add To Cart</button>
 </form>
 </body>
