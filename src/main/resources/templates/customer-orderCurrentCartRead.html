@@ -31,23 +31,27 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="product :${all_products}">
+            <tr th:each="cartItem :${cart_items}">
                 <th class="border-0" scope="row">
                     <div class="p-2">
-                        <img alt="" class="img-fluid rounded shadow-sm" th:src="${product.image}" width="150">
+                        <img alt="" class="img-fluid rounded shadow-sm" th:src="${cartItem.product.image}" width="150">
                         <div class="ml-3 d-inline-block align-middle">
-                            <h5 class="mb-0"><span class="text-dark d-inline-block align-middle" th:text="${product.name}">Product NameOriginals</span></h5>
-                            <span class="text-muted font-weight-normal font-italic d-block" th:text="'Category: ' + ${product.category}">Category</span>
+                            <h5 class="mb-0"><span class="text-dark d-inline-block align-middle" th:text="${cartItem.product.name}">Product NameOriginals</span></h5>
+                            <span class="text-muted font-weight-normal font-italic d-block" th:text="'Category: ' + ${cartItem.product.category}">Category</span>
                         </div>
                     </div>
                 </th>
-                <td class="border-0 align-middle"><strong th:text="${product.name}">Product Name</strong></td>
-                <td class="border-0 align-middle"><strong th:text="'$' + ${product.price}">Product Price</strong></td>
-                <td class="border-0 align-middle"><strong th:text="${product.stock}">Stock Quantity</strong></td>
+                <td class="border-0 align-middle"><strong th:text="${cartItem.product.name}">Product Name</strong></td>
+                <td class="border-0 align-middle"><strong th:text="'$' + ${cartItem.product.price}">Product Price</strong></td>
+                <td class="border-0 align-middle"><strong th:text="${cartItem.product.stock}">Stock Quantity</strong></td>
             </tr>
             </tbody>
         </table>
     </div>
+
+
+    <a class="btn btn-primary align-middle"
+       th:href="@{/customer/{customerId}/order/address(customerId=${customerId})}">Choose an Address to send order to</a>
 
 
     <a class="btn btn-primary align-middle"

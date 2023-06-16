@@ -3,6 +3,7 @@ package com.vodafone.ecommerce.controller_mvc;
 import com.vodafone.ecommerce.model.Cart;
 import com.vodafone.ecommerce.model.CartItem;
 import com.vodafone.ecommerce.model.SecurityUser;
+import com.vodafone.ecommerce.model.dto.CartItemDTO;
 import com.vodafone.ecommerce.service.CartService;
 import com.vodafone.ecommerce.util.AuthUtil;
 import jakarta.validation.Valid;
@@ -37,6 +38,9 @@ public class CartController {
         Cart cart = cartService.getCartByCustomerId(customerId);
      //   Set<CartItem> cartItems = cart.getCartItems().stream().filter(item -> !item.getProduct().getIsArchived()).collect(Collectors.toSet());;
         Set<CartItem> cartItems = cart.getCartItems();
+
+        CartItemDTO cartItemDTO = new CartItemDTO();
+
         model.addAttribute("customerId", customerId);
         model.addAttribute("cart_items", cartItems);
         return "customer-readCartList";
@@ -44,22 +48,46 @@ public class CartController {
 
     @PostMapping
     public String addCartItem(@PathVariable(name = "customerId") Long customerId,
-                              @Valid @ModelAttribute CartItem cartItem,
+                              @Valid @ModelAttribute CartItemDTO cartItemDTO,
                               @AuthenticationPrincipal SecurityUser user,
-                              BindingResult bindingResult, Model model) { //TODO: handle image
+                              BindingResult bindingResult,
+                              Model model) { //TODO: handle image
         AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
-        Cart cartRes = cartService.addCartItem(customerId, cartItem);
+
+        if (bindingResult.hasErrors()) {
+            Cart cart = cartService.getCartByCustomerId(customerId);
+            Set<CartItem> cartItems = cart.getCartItems();
+            model.addAttribute("customerId", customerId);
+            model.addAttribute("cart_items", cartItems);
+            return "customer-readCartList";
+        }
+
+        Cart cartRes = cartService.addCartItem(customerId, cartItemDTO);
         return "redirect:/customer/{customerId}/cart";
     }
 
     @PostMapping(value = "/{cartItemId}/update")
     public String updateCartItem(@PathVariable(name = "customerId") Long customerId,
                                  @PathVariable(name = "cartItemId") Long cartItemId,
-                                 @Valid @ModelAttribute CartItem cartItem,
+                                 @Valid @ModelAttribute("cartItemDTO") CartItemDTO cartItem,
                                  @AuthenticationPrincipal SecurityUser user,
                                  BindingResult bindingResult, Model model) {
         AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
+
+
+        if (bindingResult.hasErrors()) {
+            Cart cart = cartService.getCartByCustomerId(customerId);
+            Set<CartItem> cartItems = cart.getCartItems();
+            model.addAttribute("customerId", customerId);
+            model.addAttribute("cart_items", cartItems);
+            return "customer-readCartList";
+        }
+
         Cart cartRes = cartService.updateCartItemQuantity(cartItem, customerId, cartItemId);
+        Cart cart = cartService.getCartByCustomerId(customerId);
+        Set<CartItem> cartItems = cart.getCartItems();
+        model.addAttribute("customerId", customerId);
+        model.addAttribute("cart_items", cartItems);
         return "redirect:/customer/{customerId}/cart";
     }
 
@@ -70,12 +98,13 @@ public class CartController {
         return new ResponseEntity<>(cartService.deleteAllCartItems(customerId), HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{cartItemId}")
-    public ResponseEntity<Cart> deleteCartItem(@PathVariable(name = "customerId") Long customerId,
-                                               @PathVariable(name = "cartItemId") Long cartItemId,
-                                               @AuthenticationPrincipal SecurityUser user) {
+    @GetMapping(value = "/{cartItemId}/delete")
+    public String deleteCartItem(@PathVariable(name = "customerId") Long customerId,
+                                 @PathVariable(name = "cartItemId") Long cartItemId,
+                                 @AuthenticationPrincipal SecurityUser user) {
         AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
-        return new ResponseEntity<>(cartService.deleteCartItem(customerId, cartItemId), HttpStatus.OK);
+        cartService.deleteCartItem(customerId, cartItemId);
+        return "redirect:/customer/{customerId}/cart";
     }
 
 
