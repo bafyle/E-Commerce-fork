@@ -1,10 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <!--    <th:block th:replace="fragments/general.html :: header-files"/>-->
+    <title>Admin Products Management</title>
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
 </head>
 <body>
+<!--<th:block th:replace="fragments/general.html :: admin-nav"/>-->
+<!-- Page content-->
+<div class="container p-6 pt-3">
+    <div class="table-responsive">
 
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="p-2 px-3 text-uppercase">Product Image</div>
+                </th>
+            <tr>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="p-2 px-3 text-uppercase">Product Name</div>
+                </th>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="py-2 text-uppercase">Price</div>
+                </th>
+                <th class="border-0 bg-light" scope="col">
+                    <div class="py-2 text-uppercase">Rating</div>
+                </th>
+
+                <th class="border-0 bg-light" scope="col">
+                    <div class="py-2 text-uppercase">Quantity</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cartItem :${cart_items}">
+                <th class="border-0" scope="row">
+                    <div class="p-2">
+                        <img alt="" class="img-fluid rounded shadow-sm" th:src="${cartItem.product.image}" width="150">
+                        <div class="ml-3 d-inline-block align-middle">
+                            <h5 class="mb-0"><span class="text-dark d-inline-block align-middle" th:text="${cartItem.product.name}">Product NameOriginals</span></h5>
+                            <span class="text-muted font-weight-normal font-italic d-block" th:text="'Category: ' + ${cartItem.product.category}">Category</span>
+                        </div>
+                    </div>
+                </th>
+                <td class="border-0 align-middle"><strong th:text="'$' + ${cartItem.product.price}">Product Price</strong></td>
+                <td class="border-0 align-middle"><strong th:text="${cartItem.product.rating}">Rating</strong>
+                <td class="border-0 align-middle"><strong th:text="${cartItem.product.isArchived}">Is Available?</strong>
+                </td>
+
+                                <td class="border-0 align-middle">
+                                    <div class="row">
+                                        <form method="post" th:action="@{/customer/{customerId}/cart/{cartItemId}/update(productId=${productId}, cartItemId=${cartItem.id})}" th:object="${cartItem}" >
+                                            <input class="form-control" id="quantity" name="quantity" value="${cartItem.quantity}"
+                                                   placeholder="Product Quantity" th:field="${cartItem.quantity}" type="number">
+                                        <button class="btn btn-primary" type="submit">Update</button>
+                                        </form>
+                                    </div>
+                </td>
+
+                <td class="border-0 align-middle">
+                    <a class="btn btn-primary align-middle"
+                       th:href="@{/product/{productId}(productId=${product.id})}">View</a>
+                    <a class="btn btn-outline-dark align-middle"
+                       th:href="@{/product/{productId}/edit(productId=${product.id})}">Edit</a>
+                    <a class="btn btn-outline-dark align-middle"
+                       th:href="@{/product/{productId}/delete(productId=${product.id})}">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a class="btn btn-outline-dark align-middle"
+       th:href="@{/customer/{customerId}/order(customerId=${customerId})}">Delete</a>
+</div>
 </body>
 </html>

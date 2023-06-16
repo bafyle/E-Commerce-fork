@@ -13,7 +13,7 @@
     <h2>Product Management</h2>
   </div>
   <div>
-    <form method="post" th:action="@{/products/edit}" th:object="${product}" >
+    <form method="post" th:action="@{/product/{productId}/edit(productId=${productId})}" th:object="${product}" >
       <div class="row mb-3">
         <div class="col-sm-10">
           <input hidden="hidden" class="form-control" id="id" name="id" placeholder="id" th:field="*{id}">
@@ -66,11 +66,14 @@
           <p class="text-danger" th:errors="*{isArchived}" th:if="${#fields.hasErrors('isArchived')}"></p>
         </div>
       </div>
+
+
+
       <div class="row mb-3">
         <label class="col-sm-2 col-form-label" for="category">Category</label>
         <div class="col-sm-10">
-          <select aria-label="Default select example" class="form-select" id="category" name="category" th:field="*{category}">
-            <option th:each="category : ${T(com.vodafone.ecommerce.enums.Category).values()}" th:text="${category}" th:value="${category}"></option>
+          <select aria-label="Default select example" class="form-select" id="category" name="category" th:field="*{category.name}">
+            <option th:each="category : ${all_categories}" th:text="${category.name}" th:value="${category.name}">Category</option>
           </select>
           <p class="text-danger" th:errors="*{category}" th:if="${#fields.hasErrors('category')}"></p>
         </div>
