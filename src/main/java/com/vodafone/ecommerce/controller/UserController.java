@@ -34,9 +34,7 @@ public class UserController
     @GetMapping("/")
     public String home(Model model, @AuthenticationPrincipal SecurityUser user)
     {
-        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        model.addAttribute("name", user.getUsername() + " authorities: " + user.getAuthorities().toString());
-        return "home";
+        return "redirect:/product";
     }
 
     // @PreAuthorize("hasAuthority('Customer')")

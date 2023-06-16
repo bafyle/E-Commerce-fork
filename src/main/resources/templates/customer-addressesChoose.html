@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>(All Available Addresses for you)</title>
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-          crossorigin="anonymous">
+    <th:block th:replace="~{partials/style :: bootstrap-css}"/>
 
 </head>
 <body>
 
 <div class="container ">
+    <th:block th:replace="~{partials/navbar :: navbar}"/>
 
     <div class="row">
         <h1>List Of Current Customer Address, Please Select Address to send the order to </h1>
@@ -47,4 +45,5 @@
 
 
 </body>
+<th:block th:replace="~{partials/scripts :: scripts}"/>
 </html>
