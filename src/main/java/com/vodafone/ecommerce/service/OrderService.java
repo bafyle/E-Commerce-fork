@@ -157,22 +157,22 @@ public class OrderService {
         return orderRepo.save(orderById.get());
     }
 
-    public OrderItem updateOrderItemRating(OrderItem orderItem, Long customerId, Long orderId, Long orderItemId) {
+    public OrderItem updateOrderItemRating(Integer rating, Long customerId, Long orderId, Long orderItemId) {
         Optional<OrderItem> orderItemById = orderItemService.findByIdAndOrderIdAndCustomerId(orderId, customerId, orderItemId);
 
         if (orderItemById.isEmpty()) {
             throw new NotFoundException("This order is not registered to this customer");
         }
 
-        orderItemById.get().setRating(orderItem.getRating());
+        orderItemById.get().setRating(rating);
 
         OrderItem orderItemRes = orderItemService.updateOrderItemRating(orderItemById.get());
 
-        Double productRating = orderItemService.avgRatingByProductId(orderItem.getProduct().getId());
+        Double productRating = orderItemService.avgRatingByProductId(orderItemRes.getProduct().getId());
 
-        System.out.println("??????????????" + productRating);
+        productRating = Math.round(productRating * 100.0) / 100.0;
 
-        productService.updateProductRating(orderItem.getProduct().getId(), productRating);
+        productService.updateProductRating(orderItemRes.getProduct().getId(), productRating);
 
         return orderItemRes;
 

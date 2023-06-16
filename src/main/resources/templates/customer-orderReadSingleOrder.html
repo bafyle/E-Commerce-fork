@@ -40,7 +40,7 @@
                         <img alt="" class="img-fluid rounded shadow-sm" th:src="${orderItem.product.image}" width="150">
                         <div class="ml-3 d-inline-block align-middle">
                             <h5 class="mb-0"><span class="text-dark d-inline-block align-middle" th:text="${orderItem.product.name}">Product NameOriginals</span></h5>
-                            <span class="text-muted font-weight-normal font-italic d-block" th:text="'Category: ' + ${orderItem.product.category}">Category</span>
+                            <span class="text-muted font-weight-normal font-italic d-block" th:text="'Category: ' + ${orderItem.product.category.name}">Category</span>
                         </div>
                     </div>
                 </th>
@@ -48,9 +48,18 @@
                 <td class="border-0 align-middle"><strong th:text="'$' + ${orderItem.product.price}">Product Price</strong></td>
                 <td class="border-0 align-middle"><strong th:text="${orderItem.product.stock}">Stock Quantity</strong></td>
                 <td class="border-0 align-middle">
-                    <a class="btn btn-primary align-middle"
-                       th:href="@{/customer/{customerId}/order/{orderId}/product/rating(customerId=${customerId}, orderId=${order.id}})}">Submit Rating</a>
-                </td>
+                    <form method="post" th:action="@{/customer/{customerId}/order/{orderId}/{orderItemId}/rating(customerId=${customerId}, orderId=${order.id}, orderItemId=${orderItem.id})}"
+                          th:object="${rating}">
+                        <label>Rating: </label>
+                        <select name="rating">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        <button class="btn btn-primary" type="submit">Submit Rating</button>
+                    </form>
 
             </tr>
             </tbody>

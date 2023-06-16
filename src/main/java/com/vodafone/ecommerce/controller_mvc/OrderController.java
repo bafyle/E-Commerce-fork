@@ -4,6 +4,7 @@ import com.vodafone.ecommerce.model.*;
 import com.vodafone.ecommerce.service.CartService;
 import com.vodafone.ecommerce.service.OrderService;
 import com.vodafone.ecommerce.util.AuthUtil;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +74,32 @@ public class OrderController {
         return "customer-orderReadSingleOrder";
     }
 
+    @PostMapping("{orderId}/{orderItemId}/rating")
+    public String rateOrderItem(@PathVariable("customerId") Long customerId,
+                                @PathVariable("orderId") Long orderId,
+                                @PathVariable("orderItemId") Long orderItemId,
+                                @AuthenticationPrincipal SecurityUser user,
+                                @Valid @ModelAttribute("rating") Integer rating,
+                                BindingResult bindingResult, Model model) {
+        AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
+
+        Order order = orderService.getOrderById(customerId,orderId);
+        Set<OrderItem> orderItems = order.getOrderItems();
+        model.addAttribute("customerId", customerId);
+        model.addAttribute("orderId", orderId);
+        model.addAttribute("order",order);
+        model.addAttribute("order_items",orderItems);
+
+        if (bindingResult.hasErrors()) {
+            return "customer-orderReadSingleOrder";
+        }
+
+
+        orderService.updateOrderItemRating(rating, customerId, orderId, orderItemId);
+
+        return "redirect:/customer/"+ customerId +"/order/" + orderId;
+    }
+
 
 
     @PutMapping("/{orderId}")
@@ -84,13 +111,13 @@ public class OrderController {
         return new ResponseEntity<>(orderService.updateOrderStatus(order, customerId, orderId), HttpStatus.OK);
     }
 
-    @PutMapping("/{orderId}/{orderItemId}")
-    public ResponseEntity<OrderItem> updateOrderItemRating(@PathVariable("customerId") Long customerId,
-                                                           @PathVariable("orderId") Long orderId,
-                                                           @PathVariable("orderItemId") Long orderItemId,
-                                                           @RequestBody OrderItem orderItem,
-                                                           @AuthenticationPrincipal SecurityUser user) {
-        AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
-        return new ResponseEntity<>(orderService.updateOrderItemRating(orderItem, customerId, orderId, orderItemId), HttpStatus.OK);
-    }
+//    @PutMapping("/{orderId}/{orderItemId}")
+//    public ResponseEntity<OrderItem> updateOrderItemRating(@PathVariable("customerId") Long customerId,
+//                                                           @PathVariable("orderId") Long orderId,
+//                                                           @PathVariable("orderItemId") Long orderItemId,
+//                                                           @RequestBody OrderItem orderItem,
+//                                                           @AuthenticationPrincipal SecurityUser user) {
+//        AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
+//        return new ResponseEntity<>(orderService.updateOrderItemRating(orderItem, customerId, orderId, orderItemId), HttpStatus.OK);
+//    }
 }

@@ -69,6 +69,6 @@ public class OrderController {
                                                            @RequestBody OrderItem orderItem,
                                                            @AuthenticationPrincipal SecurityUser user) {
         AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
-        return new ResponseEntity<>(orderService.updateOrderItemRating(orderItem, customerId, orderId, orderItemId), HttpStatus.OK);
+        return new ResponseEntity<>(orderService.updateOrderItemRating(orderItem.getRating(), customerId, orderId, orderItemId), HttpStatus.OK);
     }
 }
