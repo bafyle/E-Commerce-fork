@@ -71,7 +71,7 @@ public class ProductService {
             throw new NotFoundException("Product id not found.");
         }
 
-        product.setId(id);
+//        product.setId(id);
         return productRepo.save(product);
     }
 
