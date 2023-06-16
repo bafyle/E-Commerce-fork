@@ -1,6 +1,7 @@
 package com.vodafone.ecommerce.service;
 
 import com.vodafone.ecommerce.exception.DuplicateEntityException;
+import com.vodafone.ecommerce.exception.InvalidInputException;
 import com.vodafone.ecommerce.exception.NotFoundException;
 import com.vodafone.ecommerce.model.CartItem;
 import com.vodafone.ecommerce.model.Product;
@@ -54,6 +55,15 @@ public class ProductService {
     }
 
     public Product addProduct(Product product) {
+        if (product.getName().trim().length() < 1) {
+            throw new InvalidInputException("Product name can't be empty");
+        }
+        if (product.getStock()<0) {
+            throw new InvalidInputException("Product stock can't be less than 0");
+        }
+        if (product.getPrice()<0) {
+            throw new InvalidInputException("Product price can't be less than 0");
+        }
         if (productRepo.findByName(product.getName()).isPresent()) {
             throw new DuplicateEntityException("Product with same name already exists.");
         }
@@ -68,6 +78,17 @@ public class ProductService {
     }
 
     public Product updateProduct(Product product, Long id) {
+
+        if (product.getName().trim().length() < 1) {
+            throw new InvalidInputException("Product name can't be empty");
+        }
+        if (product.getStock()<0) {
+            throw new InvalidInputException("Product stock can't be less than 0");
+        }
+        if (product.getPrice()<0) {
+            throw new InvalidInputException("Product price can't be less than 0");
+        }
+
         if (productRepo.findById(id).isEmpty()) {
             throw new NotFoundException("Product id not found.");
         }

@@ -1,5 +1,6 @@
 package com.vodafone.ecommerce.service;
 
+import com.vodafone.ecommerce.exception.InvalidInputException;
 import com.vodafone.ecommerce.exception.NotFoundException;
 import com.vodafone.ecommerce.model.CartItem;
 import com.vodafone.ecommerce.repository.CartItemRepo;
@@ -29,6 +30,10 @@ public class CartItemService {
     }
 
     public CartItem updateCartItem(CartItem cartItem, Long cartItemId) {
+        if (cartItem.getQuantity() < 1)
+        {
+            throw new InvalidInputException("Quantity can't be less than 1");
+        }
         cartItem.setId(cartItemId);
         return cartItemRepo.save(cartItem);
     }

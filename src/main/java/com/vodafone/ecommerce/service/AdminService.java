@@ -1,9 +1,11 @@
 package com.vodafone.ecommerce.service;
 
 import com.vodafone.ecommerce.exception.DuplicateEntityException;
+import com.vodafone.ecommerce.exception.InvalidInputException;
 import com.vodafone.ecommerce.exception.NotFoundException;
 import com.vodafone.ecommerce.model.Admin;
 import com.vodafone.ecommerce.repository.AdminRepo;
+import com.vodafone.ecommerce.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,12 @@ public class AdminService {
 
 
     public Admin addAdmin(Admin admin) {
+        if (!ValidationUtil.validateEmail(admin.getEmail())) {
+            throw new InvalidInputException("Invalid email");
+        }
+        if (admin.getName().trim().length()<1) {
+            throw new InvalidInputException("Name cannot be empty");
+        }
         if (adminRepo.findByEmail(admin.getEmail()).isPresent()) {
             throw new DuplicateEntityException("Account with this email already exists");
         }
@@ -43,6 +51,12 @@ public class AdminService {
     }
 
     public Admin updateAdmin(Admin admin, Long id) {
+        if (!ValidationUtil.validateEmail(admin.getEmail())) {
+            throw new InvalidInputException("Invalid email");
+        }
+        if (admin.getName().trim().length()<1) {
+            throw new InvalidInputException("Name cannot be empty");
+        }
         if (adminRepo.findById(id).isEmpty()) {
             throw new NotFoundException("Admin not found");
         }
