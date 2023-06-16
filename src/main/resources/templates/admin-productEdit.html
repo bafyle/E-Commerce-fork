@@ -3,12 +3,14 @@
 <head>
 <!--  <th:block th:replace="fragments/general.html :: header-files"/>-->
   <title>Admin Edit-Product</title>
+  <th:block th:replace="~{partials/style :: bootstrap-css}"/>
 </head>
 <body>
 <!--<th:block th:replace="fragments/general.html :: admin-nav"/>-->
 
 <!-- Page content-->
 <div class="container p-6 pt-3">
+  <th:block th:replace="~{partials/navbar :: navbar}"/>
   <div class="d-flex justify-content-between mt-3 mb-4 p-2">
     <h2>Product Management</h2>
   </div>
@@ -86,5 +88,6 @@
     </form>
   </div>
 </div>
+<th:block th:replace="~{partials/scripts :: scripts}"/>
 </body>
 </html>
