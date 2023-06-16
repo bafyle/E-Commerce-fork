@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <title>Home Page For Admin (All Available Admins)</title>
     <th:block th:replace="~{partials/style :: bootstrap-css}"/>
-
 </head>
 <body th:object="${customerId}">
     <th:block th:replace="~{partials/navbar :: navbar}"/>
 
-    <a class="btn btn-primary" th:href="@{/customer/{customerId}/order(customerId=${customerId})}">My Previous Orders</a>
-    <a class="btn btn-secondary" th:href="@{/customer/{customerId}/cart(customerId=${customerId})}">My Cart List</a>
-    <a class="btn btn-primary" th:href="@{/customer/{customerId}/account/settings(customerId=${customerId})}">My Settings</a>
-    <a class="btn btn-secondary" th:href="@{/customer/{customerId}/address(customerId=${customerId})}">My Addresses</a>
-    <a class="btn btn-primary" th:href="@{/logout}">Sign Out</a>
-
+    <div class="m-5">
+        <a class="btn btn-primary" th:href="@{/customer/{customerId}/order(customerId=${customerId})}">My Previous Orders</a>
+        <a class="btn btn-secondary" th:href="@{/customer/{customerId}/cart(customerId=${customerId})}">My Cart List</a>
+        <a class="btn btn-primary" th:href="@{/customer/{customerId}/account/settings(customerId=${customerId})}">My Settings</a>
+        <a class="btn btn-secondary" th:href="@{/customer/{customerId}/address(customerId=${customerId})}">My Addresses</a>
+        <a class="btn btn-primary" th:href="@{/logout}">Sign Out</a>
+    </div>
     <th:block th:replace="~{partials/scripts :: scripts}"/>
 </body>
 </html>
