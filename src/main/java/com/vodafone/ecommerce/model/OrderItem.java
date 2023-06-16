@@ -30,4 +30,6 @@ public class OrderItem {
     private Order order;
 
     private Integer rating;
+
+    private Integer quantity;
 }

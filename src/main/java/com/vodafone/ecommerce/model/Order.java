@@ -45,4 +45,8 @@ public class Order {
 
 //    @NotBlank
     private String status; //enum
+
+    private String address;
+
+//    private String cardNumber;
 }

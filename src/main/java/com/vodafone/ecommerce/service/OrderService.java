@@ -98,8 +98,10 @@ public class OrderService {
 
 
         cartService.deleteAllCartItems(customerId);
+        Customer customer = customerService.getCustomerById(customerId);
+        order.setCustomer(customer);
 
-        order.setCustomer(customerService.getCustomerById(customerId));
+        order.setAddress(cart.getAddress());
 
         return orderRepo.save(order);
     }
@@ -116,6 +118,7 @@ public class OrderService {
         order.setOrderItems(new HashSet<>());
 
         cartItems.forEach(cartItem -> {
+            Product productById = productService.getProductById(cartItem.getProduct().getId());
             boolean quantityOrderIsSmallerOrEqualsThanStock = cartItem.getQuantity() <= productService.getProductById(cartItem.getProduct().getId()).getStock();
             if (cartItem.getProduct().getIsArchived()) {
                 throw new InsufficientStockException("Product not available");
@@ -131,8 +134,12 @@ public class OrderService {
 
             orderItem.setOrder(order);
             orderItem.setProduct(cartItem.getProduct());
+            orderItem.setQuantity(cartItem.getQuantity());
 
             order.getOrderItems().add(orderItem);
+
+            productById.setStock(productById.getStock()-cartItem.getQuantity());
+            productService.updateProduct(productById, productById.getId());
         });
 
         // TODO: Pay With Cash (Choose An Address)
@@ -140,6 +147,7 @@ public class OrderService {
 
         cartService.deleteAllCartItems(customerId);
 
+        order.setAddress(cart.getAddress());
         order.setCustomer(customerService.getCustomerById(customerId));
 
         return orderRepo.save(order);
