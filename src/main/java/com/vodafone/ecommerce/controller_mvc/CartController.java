@@ -5,6 +5,7 @@ import com.vodafone.ecommerce.model.CartItem;
 import com.vodafone.ecommerce.model.SecurityUser;
 import com.vodafone.ecommerce.service.CartService;
 import com.vodafone.ecommerce.util.AuthUtil;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/customer/{customerId}/cart")
@@ -35,30 +35,32 @@ public class CartController {
                               @AuthenticationPrincipal SecurityUser user, Model model) {
         AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
         Cart cart = cartService.getCartByCustomerId(customerId);
-        Set<CartItem> cartItems = cart.getCartItems().stream().filter(item -> !item.getProduct().getIsArchived()).collect(Collectors.toSet());;
-
+     //   Set<CartItem> cartItems = cart.getCartItems().stream().filter(item -> !item.getProduct().getIsArchived()).collect(Collectors.toSet());;
+        Set<CartItem> cartItems = cart.getCartItems();
         model.addAttribute("customerId", customerId);
         model.addAttribute("cart_items", cartItems);
         return "customer-readCartList";
     }
 
     @PostMapping
-    public ResponseEntity<Cart> addCartItem(@PathVariable(name = "customerId") Long customerId,
-                                            @RequestBody CartItem cartItem,
-                                            @AuthenticationPrincipal SecurityUser user) { //TODO: handle image
+    public String addCartItem(@PathVariable(name = "customerId") Long customerId,
+                              @Valid @ModelAttribute CartItem cartItem,
+                              @AuthenticationPrincipal SecurityUser user,
+                              BindingResult bindingResult, Model model) { //TODO: handle image
         AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
         Cart cartRes = cartService.addCartItem(customerId, cartItem);
-        return new ResponseEntity<>(cartRes, HttpStatus.CREATED);
+        return "redirect:/customer/{customerId}/cart";
     }
 
-    @PutMapping(value = "/{cartItemId}")
-    public ResponseEntity<Cart> updateCartItem(@PathVariable(name = "customerId") Long customerId,
-                                               @PathVariable(name = "cartItemId") Long cartItemId,
-                                               @RequestBody CartItem cartItem,
-                                               @AuthenticationPrincipal SecurityUser user) {
+    @PostMapping(value = "/{cartItemId}/update")
+    public String updateCartItem(@PathVariable(name = "customerId") Long customerId,
+                                 @PathVariable(name = "cartItemId") Long cartItemId,
+                                 @Valid @ModelAttribute CartItem cartItem,
+                                 @AuthenticationPrincipal SecurityUser user,
+                                 BindingResult bindingResult, Model model) {
         AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
         Cart cartRes = cartService.updateCartItemQuantity(cartItem, customerId, cartItemId);
-        return new ResponseEntity<>(cartRes, HttpStatus.OK);
+        return "redirect:/customer/{customerId}/cart";
     }
 
     @DeleteMapping
@@ -79,26 +81,26 @@ public class CartController {
 
 
 
-    @PostMapping
-    public String checkoutCart(@PathVariable("customerId") Long customerId,
-                               @AuthenticationPrincipal SecurityUser user,
-                               BindingResult bindingResult, Model model){
-        AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
-
-        if (bindingResult.hasErrors()) {
-            Cart cart = cartService.getCartByCustomerId(customerId);
-            Set<CartItem> cartItems = cart.getCartItems().stream().filter(item -> !item.getProduct().getIsArchived()).collect(Collectors.toSet());;
-            model.addAttribute("customerId", customerId);
-            model.addAttribute("cart_items", cartItems);
-            return "customer-readCartList";
-        }
-        Cart cart = cartService.getCartByCustomerId(customerId);
-        Set<CartItem> cartItems = cart.getCartItems().stream().filter(item -> !item.getProduct().getIsArchived()).collect(Collectors.toSet());;
-
-        model.addAttribute("customerId", customerId);
-        model.addAttribute("cart_items", cartItems);
-        return "redirect:/customer/"+customerId+"/order/address";
-    }
+//    @PostMapping
+//    public String checkoutCart(@PathVariable("customerId") Long customerId,
+//                               @AuthenticationPrincipal SecurityUser user,
+//                               BindingResult bindingResult, Model model){
+//        AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
+//
+//        if (bindingResult.hasErrors()) {
+//            Cart cart = cartService.getCartByCustomerId(customerId);
+//            Set<CartItem> cartItems = cart.getCartItems().stream().filter(item -> !item.getProduct().getIsArchived()).collect(Collectors.toSet());;
+//            model.addAttribute("customerId", customerId);
+//            model.addAttribute("cart_items", cartItems);
+//            return "customer-readCartList";
+//        }
+//        Cart cart = cartService.getCartByCustomerId(customerId);
+//        Set<CartItem> cartItems = cart.getCartItems().stream().filter(item -> !item.getProduct().getIsArchived()).collect(Collectors.toSet());;
+//
+//        model.addAttribute("customerId", customerId);
+//        model.addAttribute("cart_items", cartItems);
+//        return "redirect:/customer/"+customerId+"/order/address";
+//    }
 
 //    @PostMapping
 //    public ResponseEntity<Order> checkoutCart(@PathVariable("customerId") Long customerId,

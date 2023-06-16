@@ -1,5 +1,6 @@
 package com.vodafone.ecommerce.controller_mvc;
 
+import com.vodafone.ecommerce.model.CartItem;
 import com.vodafone.ecommerce.model.Category;
 import com.vodafone.ecommerce.model.Product;
 import com.vodafone.ecommerce.service.CategoryService;
@@ -65,6 +66,7 @@ public class ProductController {
     public String getProductById(@PathVariable(name = "id") Long id, Model model) {
         Product product = productService.getProductById(id);
         model.addAttribute("product", product);
+        model.addAttribute("cartItem", new CartItem());
         return "admin-productDetailsWithAdminOptions";
     }
     @PostMapping(value="/search")
@@ -116,6 +118,7 @@ public class ProductController {
     @GetMapping("/{id}/edit")
     public String updateProduct(@PathVariable("id") Long productId, Model model) {
         Product product = productService.getProductById(productId);
+        model.addAttribute("productId", productId);
         model.addAttribute("product", product);
         model.addAttribute("all_categories",categoryService.getAllCategories());
         return "admin-productEdit";
@@ -129,7 +132,7 @@ public class ProductController {
             return "admin-productEdit";
         }
         productService.updateProduct(product, productId);
-        return "redirect:/" + productId + "/product";
+        return "redirect:/product";
     }
 
     @GetMapping(value = "/{id}/delete")

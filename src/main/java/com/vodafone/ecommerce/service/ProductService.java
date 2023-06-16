@@ -57,7 +57,8 @@ public class ProductService {
         }
 
         //TODO: cat service instead of repo?
-        categoryService.getCategoryById(product.getCategory().getId());
+        product.setCategory(categoryService.getCategoryByNameIgnoreCases(product.getCategory().getName()));
+
         product.setIsArchived(false); //default?
 
         // TODO: handle image
@@ -70,6 +71,7 @@ public class ProductService {
         }
 
         product.setId(id);
+        product.setCategory(categoryService.getCategoryByNameIgnoreCases(product.getCategory().getName()));
         return productRepo.save(product);
     }
 
@@ -80,7 +82,7 @@ public class ProductService {
             throw new NotFoundException("Product id not found.");
         }
 
-        product.get().setIsArchived(true);
+        product.get().setIsArchived(!product.get().getIsArchived());
 
         productRepo.save(product.get());
     }
