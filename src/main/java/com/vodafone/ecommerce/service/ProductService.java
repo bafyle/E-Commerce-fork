@@ -20,16 +20,18 @@ public class ProductService {
     private final ProductRepo productRepo;
     private final CategoryService categoryService;
 
-    private final CartItemService cartItemService;
-
     @Autowired
-    public ProductService(ProductRepo productRepo, CategoryService categoryService, CartItemService cartItemService) {
+    public ProductService(ProductRepo productRepo, CategoryService categoryService) {
         this.productRepo = productRepo;
         this.categoryService = categoryService;
-        this.cartItemService = cartItemService;
     }
 
     public List<Product> getAllProducts(Integer page, Integer size, String name, Long categoryId) {
+        if (page<0)
+            page = 0;
+        if (size<1)
+            size=10;
+
         Pageable pageable = PageRequest.of(page, size);
         if (name != null && categoryId != null) {
             return productRepo.findByNameContainsIgnoreCaseAndCategoryId(pageable, name, categoryId).getContent();
@@ -72,6 +74,7 @@ public class ProductService {
 
         product.setId(id);
         product.setCategory(categoryService.getCategoryByNameIgnoreCases(product.getCategory().getName()));
+
         return productRepo.save(product);
     }
 
