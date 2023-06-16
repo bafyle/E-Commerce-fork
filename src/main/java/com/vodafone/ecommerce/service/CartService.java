@@ -2,6 +2,7 @@ package com.vodafone.ecommerce.service;
 
 import com.vodafone.ecommerce.exception.DuplicateEntityException;
 import com.vodafone.ecommerce.exception.InsufficientStockException;
+import com.vodafone.ecommerce.exception.InvalidInputException;
 import com.vodafone.ecommerce.exception.NotFoundException;
 import com.vodafone.ecommerce.model.Cart;
 import com.vodafone.ecommerce.model.CartItem;
@@ -42,6 +43,10 @@ public class CartService {
         // check if product exists
         Product productById = productService.getProductById(cartItemDTO.getProductId());
 
+        if (cartItemDTO.getQuantity() < 1) {
+            throw new InvalidInputException("Quantity can't be less than 1");
+        }
+
         if (productById.getIsArchived()) {
             throw new InsufficientStockException("Item not available");
         }
@@ -62,14 +67,18 @@ public class CartService {
         return cartRepo.save(cart);
     }
 
-    public Cart updateCartItemQuantity(CartItemDTO cartItem, Long customerId, Long cartItemId) {
+    public Cart updateCartItemQuantity(CartItemDTO cartItemDTO, Long customerId, Long cartItemId) {
         // check if cart exists
         Cart cart = getCartByCustomerId(customerId);
         CartItem cartItemById = cartItemService.getCartItemByIdAndCustomerId(cartItemId, customerId);
         // check if product exists
-        Product productById = productService.getProductById(cartItem.getProductId());
+        Product productById = productService.getProductById(cartItemDTO.getProductId());
 
-        if (productById.getStock() < cartItem.getQuantity()) {
+        if (cartItemDTO.getQuantity() < 1) {
+            throw new InvalidInputException("Quantity can't be less than 1");
+        }
+
+        if (productById.getStock() < cartItemDTO.getQuantity()) {
             throw new InsufficientStockException("Insufficient stock requested.");
         }
 
@@ -78,7 +87,7 @@ public class CartService {
 //        }
 
         cartItemById.setCart(cart);
-        cartItemById.setQuantity(cartItem.getQuantity());
+        cartItemById.setQuantity(cartItemDTO.getQuantity());
 
         cartItemService.updateCartItem(cartItemById, cartItemId);
         return cart;

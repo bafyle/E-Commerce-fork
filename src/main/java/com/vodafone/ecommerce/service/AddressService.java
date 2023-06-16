@@ -1,6 +1,7 @@
 package com.vodafone.ecommerce.service;
 
 import com.vodafone.ecommerce.exception.DuplicateEntityException;
+import com.vodafone.ecommerce.exception.InvalidInputException;
 import com.vodafone.ecommerce.exception.NotFoundException;
 import com.vodafone.ecommerce.model.Address;
 import com.vodafone.ecommerce.model.Customer;
@@ -47,6 +48,10 @@ public class AddressService {
     public Address addAddress(Long customerId, Address address) {
         Customer customer = customerService.getCustomerById(customerId);
 
+        if (address.getAddress().trim().length() < 1) {
+            throw new InvalidInputException("Address cannot be empty");
+        }
+
         if (customer.getAddresses().stream().anyMatch(address1 -> address1.getAddress().equals(address.getAddress()))) {
             throw new DuplicateEntityException("This address is already registered to this customer");
         }
@@ -58,6 +63,10 @@ public class AddressService {
 
     public Address updateAddress(Long customerId, Long addressId, Address address) {
         Customer customer = customerService.getCustomerById(customerId);
+
+        if (address.getAddress().trim().length() < 1) {
+            throw new InvalidInputException("Address cannot be empty");
+        }
 
         if (customer.getAddresses().stream().noneMatch(address1 -> address1.getId().equals(addressId))) {
             throw new NotFoundException("This address is not registered to this customer");

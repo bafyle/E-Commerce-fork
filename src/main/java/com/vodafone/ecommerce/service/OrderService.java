@@ -5,6 +5,7 @@ import com.vodafone.ecommerce.model.*;
 import com.vodafone.ecommerce.repository.OrderRepo;
 import com.vodafone.ecommerce.util.PaymentUtil;
 import com.vodafone.ecommerce.util.ValidationCardUtil;
+import com.vodafone.ecommerce.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +51,31 @@ public class OrderService {
     }
 
     public Order checkoutCart(Long customerId, Card card) {
+        if (card.getCardNumber().trim().length() < 16) {
+            throw new InvalidInputException("Card number must be 16 digits");
+        }
+        if (ValidationUtil.isNumeric(card.getCardNumber())) {
+            throw new InvalidInputException("Card number must only contain digits");
+        }
+        if (card.getExpirationMonth().trim().length() < 2) {
+            throw new InvalidInputException("Card expiration month must be 2 digits");
+        }
+        if (ValidationUtil.isNumeric(card.getExpirationMonth())) {
+            throw new InvalidInputException("Card expiration month must only contain digits");
+        }
+        if (card.getExpirationYear().trim().length() < 4) {
+            throw new InvalidInputException("Card expiration year must be 4 digits");
+        }
+        if (ValidationUtil.isNumeric(card.getExpirationYear())) {
+            throw new InvalidInputException("Card expiration year must only contain digits");
+        }
+        if (card.getPinNumber().trim().length() < 4) {
+            throw new InvalidInputException("Card number must be 4 digits");
+        }
+        if (ValidationUtil.isNumeric(card.getPinNumber())) {
+            throw new InvalidInputException("Card pin must only contain digits");
+        }
+
         Cart cart = cartService.getCartByCustomerId(customerId);
         Set<CartItem> cartItems = cart.getCartItems();
 
@@ -156,6 +182,10 @@ public class OrderService {
     public Order updateOrderStatus(Order order, Long customerId, Long orderId) {
         Optional<Order> orderById = orderRepo.findByIdAndCustomerId(orderId, customerId);
 
+        if (order.getStatus().trim().length() < 1) {
+            throw new InvalidInputException("Order status can't be empty");
+        }
+
         if (orderById.isEmpty()) {
             throw new NotFoundException("This order is not registered to this customer");
         }
@@ -170,6 +200,10 @@ public class OrderService {
 
         if (orderItemById.isEmpty()) {
             throw new NotFoundException("This order is not registered to this customer");
+        }
+
+        if (rating < 1 || rating > 5) {
+            throw new InvalidInputException("Rating must be between 1 and 5");
         }
 
         orderItemById.get().setRating(rating);
