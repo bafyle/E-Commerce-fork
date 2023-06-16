@@ -29,6 +29,8 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private Set<CartItem> cartItems;
 
+    private String address;
+
     @JsonProperty("totalPrice")
     public Double getTotalPrice() {
         double sum = 0;
