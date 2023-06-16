@@ -22,16 +22,16 @@
 
                 <!-- Customer links -->
                 <li sec:authorize="hasAuthority('Customer')" class="nav-item">
-                    <a class="nav-link" th:href="@{/customer/{customerId}/order(customerId=${customerId})}">Order History</a>
+                    <a class="nav-link" th:href="@{/customer/{customerId}/order(customerId=${#authentication.getPrincipal().getUser().getId()})}">Order History</a>
                 </li>
                 <li sec:authorize="hasAuthority('Customer')" class="nav-item">
-                    <a class="nav-link" th:href="@{/customer/{customerId}/cart(customerId=${customerId})}">Cart List</a>
+                    <a class="nav-link" th:href="@{/customer/{customerId}/cart(customerId=${#authentication.getPrincipal().getUser().getId()})}">Cart List</a>
                 </li>
                 <li sec:authorize="hasAuthority('Customer')" class="nav-item">
-                    <a class="nav-link" th:href="@{/customer/{customerId}/account/settings(customerId=${customerId})}">Settings</a>
+                    <a class="nav-link" th:href="@{/customer/{customerId}/account/settings(customerId=${#authentication.getPrincipal().getUser().getId()})}">Settings</a>
                 </li>
                 <li sec:authorize="hasAuthority('Customer')" class="nav-item">
-                    <a class="nav-link" th:href="@{/customer/{customerId}/address(customerId=${customerId})}">My Addresses</a>
+                    <a class="nav-link" th:href="@{/customer/{customerId}/address(customerId=${#authentication.getPrincipal().getUser().getId()})}">My Addresses</a>
                 </li>
                 <!-- Logout -->
                 <li class="nav-item">
