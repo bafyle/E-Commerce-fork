@@ -79,7 +79,7 @@ public void sendAdminVerficationEmail(Admin user, HttpServletRequest request) th
     helper.setSubject(subject);
         
     content = content.replace("[[name]]", user.getEmail());
-    String verifyURL = getCurrentUrl(request) + "/verify?code=" + user.getVerficationCode();
+    String verifyURL = getCurrentUrl(request) + "/password-reset?code=" + user.getVerficationCode();
         
     content = content.replace("[[URL]]", verifyURL);
         
