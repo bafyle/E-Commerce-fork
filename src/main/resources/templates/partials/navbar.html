@@ -22,7 +22,7 @@
 
                 <!-- Customer links -->
                 <li sec:authorize="hasAuthority('Customer')" class="nav-item">
-                    <a class="nav-link" th:href="@{/customer/{customerId}/order(customerId=${#authentication.getPrincipal().getUser().getId()})}">Order History</a>
+                    <a class="nav-link" th:href="@{/customer/{customerId}/order/history(customerId=${#authentication.getPrincipal().getUser().getId()})}">Order History</a>
                 </li>
                 <li sec:authorize="hasAuthority('Customer')" class="nav-item">
                     <a class="nav-link" th:href="@{/customer/{customerId}/cart(customerId=${#authentication.getPrincipal().getUser().getId()})}">Cart List</a>

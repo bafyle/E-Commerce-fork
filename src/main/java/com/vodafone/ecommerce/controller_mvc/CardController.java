@@ -1,5 +1,6 @@
 package com.vodafone.ecommerce.controller_mvc;
 
+import com.vodafone.ecommerce.exception.AddressNotFoundException;
 import com.vodafone.ecommerce.model.*;
 import com.vodafone.ecommerce.service.CartService;
 import com.vodafone.ecommerce.service.OrderService;
@@ -49,6 +50,13 @@ public class CardController {
             model.addAttribute("customerId", customerId);
             model.addAttribute("card", card);
             return "customer-card";
+        }
+
+        Cart cart = cartService.getCartByCustomerId(customerId);
+        if (!(cart != null && cart.getAddress() != null &&
+                !cart.getAddress().isEmpty()))
+        {
+            throw new AddressNotFoundException("Address Not Found, Please select an adress for the order");
         }
 
 

@@ -54,25 +54,36 @@ public class OrderService {
         if (card.getCardNumber().trim().length() < 16) {
             throw new InvalidInputException("Card number must be 16 digits");
         }
-        if (ValidationUtil.isNumeric(card.getCardNumber())) {
+        if (!ValidationUtil.isNumeric(card.getCardNumber())) {
             throw new InvalidInputException("Card number must only contain digits");
         }
-        if (card.getExpirationMonth().trim().length() < 2) {
-            throw new InvalidInputException("Card expiration month must be 2 digits");
-        }
-        if (ValidationUtil.isNumeric(card.getExpirationMonth())) {
+        if (!ValidationUtil.isNumeric(card.getExpirationMonth())) {
             throw new InvalidInputException("Card expiration month must only contain digits");
         }
-        if (card.getExpirationYear().trim().length() < 4) {
+
+        if (card.getExpirationMonth().trim().length() == 0)
+        {
+            throw new InvalidInputException("Card expiration month must be valid digit(s)");
+        }
+        if (card.getExpirationMonth().trim().length() == 1 && Integer.parseInt(card.getExpirationMonth()) <= 9) {
+            card.setExpirationMonth("0" + card.getExpirationMonth());
+        }
+
+        if (card.getExpirationMonth().trim().length() > 2)
+        {
+            throw new InvalidInputException("Card expiration month must be 2 digits");
+        }
+
+        if (card.getExpirationYear().trim().length() != 4) {
             throw new InvalidInputException("Card expiration year must be 4 digits");
         }
-        if (ValidationUtil.isNumeric(card.getExpirationYear())) {
+        if (!ValidationUtil.isNumeric(card.getExpirationYear())) {
             throw new InvalidInputException("Card expiration year must only contain digits");
         }
         if (card.getPinNumber().trim().length() < 4) {
             throw new InvalidInputException("Card number must be 4 digits");
         }
-        if (ValidationUtil.isNumeric(card.getPinNumber())) {
+        if (!ValidationUtil.isNumeric(card.getPinNumber())) {
             throw new InvalidInputException("Card pin must only contain digits");
         }
 
@@ -85,6 +96,7 @@ public class OrderService {
 
         Order order = new Order();
         order.setOrderItems(new HashSet<>());
+        order.setPaymentMethod("Card");
         for (CartItem cartItem:
               cartItems) {
           if (cartItem.getProduct().getIsArchived()) {
@@ -132,7 +144,7 @@ public class OrderService {
         return orderRepo.save(order);
     }
 
-    public Order checkoutCart(Long customerId, Address address) {
+    public Order checkoutCart(Long customerId) {
         Cart cart = cartService.getCartByCustomerId(customerId);
         Set<CartItem> cartItems = cart.getCartItems();
 
@@ -142,7 +154,7 @@ public class OrderService {
 
         Order order = new Order();
         order.setOrderItems(new HashSet<>());
-
+        order.setPaymentMethod("Cash");
         cartItems.forEach(cartItem -> {
             Product productById = productService.getProductById(cartItem.getProduct().getId());
             boolean quantityOrderIsSmallerOrEqualsThanStock = cartItem.getQuantity() <= productService.getProductById(cartItem.getProduct().getId()).getStock();

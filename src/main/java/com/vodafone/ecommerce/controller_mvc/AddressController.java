@@ -64,9 +64,9 @@ public class AddressController {
         return "customer-addressCreate";
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public String addCustomerAddress(@PathVariable(name = "customerId") Long customerId,
-                                     @Valid @ModelAttribute("address") Address address,
+                                     @Valid @ModelAttribute("address") String address,
                                      @AuthenticationPrincipal SecurityUser user,
                                      BindingResult bindingResult, Model model) {
         AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
@@ -77,7 +77,10 @@ public class AddressController {
             return "customer-addressCreate";
         }
 
-        addressService.addAddress(customerId,address);
+        Address address1 = new Address();
+        address1.setAddress(address);
+    //    address1.setCustomer();
+        addressService.addAddress(customerId,address1);
         return "redirect:/customer/"+customerId+"/address";
     }
 
@@ -117,6 +120,7 @@ public class AddressController {
         addressService.deleteAddress(customerId, addressId);
         return "redirect:/customer/"+customerId+"/address";
     }
+
 
 
 

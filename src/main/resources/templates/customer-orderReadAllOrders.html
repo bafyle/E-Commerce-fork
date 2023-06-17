@@ -32,9 +32,11 @@
                 <td class="border-0 align-middle"><strong th:text="${order.createdAt}">Order Date</strong></td>
                 <td class="border-0 align-middle"><strong th:text="${order.id}">Order ID</strong></td>
 
+                <td>
+                    <a class="btn btn-primary align-middle"
+                       th:href="@{/customer/{customerId}/order/{orderId}(customerId=${customerId}, orderId=${order.id})}">View</a>
+                </td>
 
-                <a class="btn btn-primary align-middle"
-                   th:href="@{/customer/{customerId}/order/{orderId}(customerId=${customerId}, orderId=${order.id})}">View</a>
 
             </tr>
             </tbody>

@@ -32,7 +32,14 @@
             <td th:text="${address.address}"></td>
             <td th:text="${address.customer.name}"></td>
             <td >
-                <a class="btn btn-primary" th:href="@{/customer/{customerId}/order(customerId=${customerId})}">Select This Address</a>
+
+                <form method="post"th:action="@{/customer/{customerId}/order/address/choose(customerId=${customerId})}" >
+                    <input hidden="hidden" class="form-control" id="address" name="selectedAddress" th:value="${address.address}"
+                           placeholder="Enter an Address" type="text">
+                    <button class="btn btn-primary" type="submit">Select this address</button>
+                </form>
+
+
             </td>
         </tr>
         </tbody>
@@ -40,6 +47,12 @@
 
     </table>
 
+
+    <a class="btn btn-primary align-middle"
+       th:href="@{/customer/{customerId}/order/card(customerId=${customerId})}">Pay with CARD</a>
+
+    <a class="btn btn-primary align-middle"
+       th:href="@{/customer/{customerId}/order/address/cash(customerId=${customerId})}">Pay With Cash (On Delivery)</a>
 
 </div>
 

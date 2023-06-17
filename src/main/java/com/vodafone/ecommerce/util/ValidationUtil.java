@@ -14,7 +14,7 @@ public class ValidationUtil {
 
     public static boolean isNumeric(String str) {
         try {
-            Integer.parseInt(str);
+            Long.parseLong(str);
             return true;
         } catch(NumberFormatException e){
             return false;

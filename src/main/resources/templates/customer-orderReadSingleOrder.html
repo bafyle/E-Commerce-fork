@@ -46,7 +46,7 @@
                 </th>
                 <td class="border-0 align-middle"><strong th:text="'$' + ${orderItem.product.name}">Product Name</strong></td>
                 <td class="border-0 align-middle"><strong th:text="'$' + ${orderItem.product.price}">Product Price</strong></td>
-                <td class="border-0 align-middle"><strong th:text="${orderItem.product.stock}">Stock Quantity</strong></td>
+                <td class="border-0 align-middle"><strong th:text="${orderItem.quantity}">Stock Quantity</strong></td>
                 <td class="border-0 align-middle">
                     <form method="post" th:action="@{/customer/{customerId}/order/{orderId}/{orderItemId}/rating(customerId=${customerId}, orderId=${order.id}, orderItemId=${orderItem.id})}"
                           th:object="${rating}">
