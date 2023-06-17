@@ -58,6 +58,11 @@ public class ProductService {
         if (product.getName().trim().length() < 1) {
             throw new InvalidInputException("Product name can't be empty");
         }
+        if(product.getStock() == null)
+        {
+            throw new InvalidInputException("Product Stock cant be empty");
+        }
+
         if (product.getStock()<0) {
             throw new InvalidInputException("Product stock can't be less than 0");
         }
@@ -68,12 +73,10 @@ public class ProductService {
             throw new DuplicateEntityException("Product with same name already exists.");
         }
 
-        //TODO: cat service instead of repo?
         product.setCategory(categoryService.getCategoryByNameIgnoreCases(product.getCategory().getName()));
 
         product.setIsArchived(false); //default?
 
-        // TODO: handle image
         return productRepo.save(product);
     }
 
