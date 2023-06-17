@@ -13,7 +13,8 @@
         <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
             <h1 class="text-center">Edit Address</h1>
             <div class="card-body">
-                <form th:action="@{/customer/{customerId}/address/{id}/edit(id=${address.id},customerId=${customerId})}" th:object="${address}" method="post">
+                <form th:action="@{/customer/{customerId}/address/{id}/edit(id=${to_be_updatedAddress.id},customerId=${customerId})}"
+                      th:object="${to_be_updatedAddress}" method="post">
                     <div class="form-group">
 
                         <label>Address Name</label>
