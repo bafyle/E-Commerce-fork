@@ -37,12 +37,14 @@ public class CashController {
 
     @GetMapping
     public String chooseCustomerAddresses(@PathVariable(name = "customerId") Long customerId,
-                                          @AuthenticationPrincipal SecurityUser user, Model model) {
+                                          @AuthenticationPrincipal SecurityUser user, Model model) 
+    {
         AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
         Set<Address> addresses = addressService.getAllAddressesByCustomerId(customerId);
+        Cart c = cartService.getCartByCustomerId(customerId);
         model.addAttribute("customerId", customerId);
         model.addAttribute("all_addresses", addresses);
-        model.addAttribute("selectedAddress","");
+        model.addAttribute("selectedAddress",c.getAddress());
         return "customer-addressesChoose";
     }
 
@@ -85,11 +87,11 @@ public class CashController {
             return "customer-addressesChoose";
         }
 
-           Cart cart =cartService.getCartByCustomerId(customerId);
-           cart.setAddress(selectedAddress);
+        Cart cart =cartService.getCartByCustomerId(customerId);
+        cart.setAddress(selectedAddress);
         model.addAttribute("customerId", customerId);
         model.addAttribute("all_addresses", addresses);
-      //  model.addAttribute("selectedAddress","");
+        model.addAttribute("selectedAddress",selectedAddress);
         cartService.updateCartAddress(selectedAddress,customerId);
         return "redirect:/customer/"+customerId+"/order/address";
     }

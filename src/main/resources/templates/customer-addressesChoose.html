@@ -19,6 +19,7 @@
     <table class="table table-striped table-bordered">
         <thead class="table-dark">
         <tr>
+            <th>Selected</th>
             <th>Address ID</th>
             <th>Address Name</th>
             <th>Address Customer</th>
@@ -28,6 +29,14 @@
 
         <tbody>
         <tr th:each="address: ${all_addresses}">
+            <td>
+                <span th:with="selected_address=${address.address.equals(selectedAddress)}">
+                    <span th:switch="${selected_address}">
+                        <input th:case="${true}" type="checkbox" name="address-selected" disabled checked>
+                        <input th:case="${false}" type="checkbox" name="address-selected" disabled >
+                    </span>
+                </span>
+            </td>
             <td th:text="${address.id}"></td>
             <td th:text="${address.address}"></td>
             <td th:text="${address.customer.name}"></td>
