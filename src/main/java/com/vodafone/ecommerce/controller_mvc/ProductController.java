@@ -36,20 +36,19 @@ public class ProductController {
         this.categoryService = categoryService;
     }
 
-    //TODO: page size according to spring profile?
     @GetMapping
     @PreAuthorize("hasAnyAuthority('Admin','Customer')")
     public String getAllProducts(
             @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
             @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "category", required = false) Long categoryId, Model model) { //TODO: cat_id?
+            @RequestParam(name = "category", required = false) Long categoryId, Model model) {
 
-        Product p1 = new Product();
-        p1.setName("Product Dummy #1");
-        p1.setImage("img");
-        p1.setPrice(4D);
-        p1.setStock(50);
+//        Product p1 = new Product();
+//        p1.setName("Product Dummy #1");
+//        p1.setImage("img");
+//        p1.setPrice(4D);
+//        p1.setStock(50);
         // p1.setCategory(categoryService.getCategoryById(3L));
 
      //   productService.addProduct(p1);

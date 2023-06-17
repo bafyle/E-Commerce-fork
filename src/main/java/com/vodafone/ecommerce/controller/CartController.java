@@ -35,7 +35,7 @@ public class CartController {
     @PostMapping
     public ResponseEntity<Cart> addCartItem(@PathVariable(name = "customerId") Long customerId,
                                             @RequestBody CartItem cartItem,
-                                            @AuthenticationPrincipal SecurityUser user) { //TODO: handle image
+                                            @AuthenticationPrincipal SecurityUser user) {
         AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
         CartItemDTO cartItemDTO = new CartItemDTO();
         cartItemDTO.setQuantity(cartItem.getQuantity());

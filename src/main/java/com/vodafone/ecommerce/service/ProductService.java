@@ -125,5 +125,5 @@ public class ProductService {
 
         productRepo.save(product.get());
     }
-    //TODO: links with hateoas
+    //TODO: REST links with hateoas
 }
