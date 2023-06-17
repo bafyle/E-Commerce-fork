@@ -52,5 +52,28 @@ If you encounter any error related to the database, open the application.propert
 
 There is an SQL script that runs every time you run the application. This script is to make sure that there is some data in the database to test with and to log in as an admin or as a customer.
 
+
+## Application Architecture
+We made a simple architecture for the application 
+![alt photo 1](./docs/images/Architecture.jpg)
+
+## Application Flow
+We have three flows in our application:
+ - Authentication flow:
+ - ![alt photo 1](./docs/images/AuthFlow.png)
+
+ - Customer Flow:
+ - ![alt photo 1](./docs/images/CustomerFlow.png)
+
+ - Admin Flow:
+ - ![alt photo 1](./docs/images/AdminFlow.png)
+
+## Entity Relationship Diagram for the Database
+The following photo describe the ERD of the application
+![alt photo 1](./docs/images/ERD.png)
+
+
+
+
 Conventions:
 https://docs.google.com/document/d/12wXixU3w7qnmB1TurApnZDzj5Bbxh0fO
