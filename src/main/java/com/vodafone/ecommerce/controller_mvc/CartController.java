@@ -51,7 +51,7 @@ public class CartController {
                               @Valid @ModelAttribute CartItemDTO cartItemDTO,
                               @AuthenticationPrincipal SecurityUser user,
                               BindingResult bindingResult,
-                              Model model) { //TODO: handle image
+                              Model model) {
         AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
 
         if (bindingResult.hasErrors()) {

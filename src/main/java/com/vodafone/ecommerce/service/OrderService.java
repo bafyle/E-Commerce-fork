@@ -181,9 +181,6 @@ public class OrderService {
             productService.updateProduct(productById, productById.getId());
         });
 
-        // TODO: Pay With Cash (Choose An Address)
-     //   WE must store the address somewhere in the order
-
         cartService.deleteAllCartItems(customerId);
 
         order.setAddress(cart.getAddress());
