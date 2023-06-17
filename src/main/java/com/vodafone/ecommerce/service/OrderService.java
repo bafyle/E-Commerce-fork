@@ -116,6 +116,7 @@ public class OrderService {
 
             orderItem.setOrder(order);
             orderItem.setProduct(cartItem.getProduct());
+            orderItem.setQuantity(cartItem.getQuantity());
 
             order.getOrderItems().add(orderItem);
         }

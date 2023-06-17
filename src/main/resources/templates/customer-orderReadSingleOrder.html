@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 </th>
-                <td class="border-0 align-middle"><strong th:text="'$' + ${orderItem.product.name}">Product Name</strong></td>
+                <td class="border-0 align-middle"><strong th:text="${orderItem.product.name}">Product Name</strong></td>
                 <td class="border-0 align-middle"><strong th:text="'$' + ${orderItem.product.price}">Product Price</strong></td>
                 <td class="border-0 align-middle"><strong th:text="${orderItem.quantity}">Stock Quantity</strong></td>
                 <td class="border-0 align-middle">
