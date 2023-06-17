@@ -1,9 +1,6 @@
 package com.vodafone.ecommerce.service;
 
-import com.vodafone.ecommerce.exception.DuplicateEntityException;
-import com.vodafone.ecommerce.exception.InsufficientStockException;
-import com.vodafone.ecommerce.exception.InvalidInputException;
-import com.vodafone.ecommerce.exception.NotFoundException;
+import com.vodafone.ecommerce.exception.*;
 import com.vodafone.ecommerce.model.Cart;
 import com.vodafone.ecommerce.model.CartItem;
 import com.vodafone.ecommerce.model.Product;
@@ -108,6 +105,19 @@ public class CartService {
         CartItem cartItem = cartItemService.getCartItemByIdAndCustomerId(cartItemId, customerId);
 
         cartItemService.deleteCartItemById(cartItemId);
+        return cart;
+    }
+
+    public Cart updateCartAddress(String address, Long customerId) {
+        // check if cart exists
+        Cart cart = getCartByCustomerId(customerId);
+        if (!(cart != null && cart.getAddress() != null && !cart.getAddress().isEmpty()))
+        {
+            throw new AddressNotFoundException("Adress Not Found");
+        }
+
+        cart.setAddress(address);
+        cartRepo.save(cart);
         return cart;
     }
 }
