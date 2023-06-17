@@ -29,6 +29,7 @@
                 <th>Admin Name</th>
                 <th>Admin Email</th>
                 <th>Admin Password</th>
+                <th>Account Activated</th>
                 <th>Admin Actions</th>
             </tr>
         </thead>
@@ -38,6 +39,12 @@
             <td th:text="${admin.name}"></td>
             <td th:text="${admin.email}"></td>
             <td th:text="${admin.password}"></td>
+            <td>
+                <span th:switch="${admin.enabled}">
+                    <input th:case="${true}" type="checkbox" name="admin-enabled" checked disabled>
+                    <input th:case="${false}" type="checkbox" name="admin-disabled" disabled>
+                </span>
+            </td>
             <td >
                 <a class="btn btn-primary" th:href="@{/admin/{id}/edit(id=${admin.id})}">Edit</a>
                 <a class="btn btn-secondary" th:href="@{/admin/{id}/delete(id=${admin.id})}">Delete</a>
