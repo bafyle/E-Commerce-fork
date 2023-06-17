@@ -84,22 +84,7 @@ public class AddressController {
         return "redirect:/customer/"+customerId+"/address";
     }
 
-    @PostMapping(value = "/{addressId}/edit")
-    public String updateCustomerAddress(@PathVariable(name = "customerId") Long customerId,
-                                                         @PathVariable("addressId") Long addressId,
-                                                         @Valid @ModelAttribute("address") Address address,
-                                                         @AuthenticationPrincipal SecurityUser user,
-                                        BindingResult bindingResult, Model model) {
-        AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
-        if (bindingResult.hasErrors())
-        {
-            model.addAttribute("address", address);
-            return "customer-addressEdit";
-        }
 
-        addressService.updateAddress(customerId,addressId, address);
-        return "redirect:/customer/"+customerId+"/address";
-    }
 
     @GetMapping(value = "/{addressId}/edit")
     public String updateCustomerAddress(@PathVariable(name = "customerId") Long customerId,
@@ -108,8 +93,30 @@ public class AddressController {
                                         Model model) {
         AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
         Address address = addressService.getAddressById(customerId,addressId);
-        model.addAttribute("address", address);
+        model.addAttribute("to_be_updatedAddress", address);
         return "customer-addressEdit";
+    }
+
+    @PostMapping(value = "/{addressId}/edit")
+    public String updateCustomerAddress(@PathVariable(name = "customerId") Long customerId,
+                                        @PathVariable("addressId") Long addressId,
+                                        @ModelAttribute("to_be_updatedAddress") Address address,
+                                        @AuthenticationPrincipal SecurityUser user,
+                                        BindingResult bindingResult, Model model) {
+        AuthUtil.isNotLoggedInUserThrowException(customerId, user.getUser().getId());
+        if (bindingResult.hasErrors())
+        {
+            model.addAttribute("address", addressService.getAddressById(customerId,addressId));
+            return "customer-addressEdit";
+        }
+
+        Address updatedAddress = addressService.getAddressById(customerId,addressId);
+        updatedAddress.setAddress(address.getAddress());
+        addressService.updateAddress(customerId,addressId, updatedAddress);
+        Set<Address> addresses = addressService.getAllAddressesByCustomerId(customerId);
+        model.addAttribute("customerId", customerId);
+        model.addAttribute("all_addresses", addresses);
+        return "redirect:/customer/"+customerId+"/address";
     }
 
     @GetMapping(value = "/{addressId}/delete")
