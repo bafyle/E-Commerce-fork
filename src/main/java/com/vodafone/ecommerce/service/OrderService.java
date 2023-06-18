@@ -114,7 +114,12 @@ public class OrderService {
 
             }
 
+
             OrderItem orderItem = new OrderItem();
+
+            if (cartItem.getQuantity() > 10) {
+                throw new InvalidInputException("Maximum quantity is 10 items per product");
+            }
 
             orderItem.setOrder(order);
             orderItem.setProduct(cartItem.getProduct());
@@ -175,6 +180,10 @@ public class OrderService {
             }
 
             OrderItem orderItem = new OrderItem();
+
+            if (cartItem.getQuantity() > 10) {
+                throw new InvalidInputException("Maximum quantity is 10 items per product");
+            }
 
             orderItem.setOrder(order);
             orderItem.setProduct(cartItem.getProduct());
