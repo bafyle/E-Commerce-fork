@@ -45,7 +45,7 @@
                 <th class="border-0 bg-light" scope="col">
                     <div class="py-2 text-uppercase">Quantity</div>
                 </th>
-                <th class="border-0 bg-light" scope="col">
+                <th sec:authorize="hasAuthority('Admin')" class="border-0 bg-light" scope="col">
                     <div class="py-2 text-uppercase">Is Archived?</div>
                 </th>
                 <th class="border-0 bg-light" scope="col">
@@ -55,27 +55,31 @@
             </thead>
             <tbody>
             <tr th:each="product :${all_products}">
-                <th class="border-0" scope="row">
-                    <div class="p-2">
-                        <img alt="" class="img-fluid rounded shadow-sm" th:src="${product.image}" width="150">
-                        <div class="ml-3 d-inline-block align-middle">
-                            <h5 class="mb-0"><span class="text-dark d-inline-block align-middle" th:text="${product.name}">Product NameOriginals</span></h5>
-                            <span class="text-muted font-weight-normal font-italic d-block" th:text="'Category: ' + ${product.category.name}">Category</span>
-                        </div>
+                <div th:with="expression=${!product.isArchived || #strings.contains(#authentication.principal.authorities, 'Admin')}">
+                    <div th:if="${expression}">
+                        <th class="border-0" scope="row">
+                            <div class="p-2">
+                                <img alt="" class="img-fluid rounded shadow-sm" th:src="${product.image}" width="150">
+                                <div class="ml-3 d-inline-block align-middle">
+                                    <h5 class="mb-0"><span class="text-dark d-inline-block align-middle" th:text="${product.name}">Product NameOriginals</span></h5>
+                                    <span class="text-muted font-weight-normal font-italic d-block" th:text="'Category: ' + ${product.category.name}">Category</span>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="border-0 align-middle"><strong th:text="'$' + ${product.price}">Product Price</strong></td>
+                        <td class="border-0 align-middle"><strong th:text="${product.stock}">Stock Quantity</strong>
+                        <td sec:authorize="hasAuthority('Admin')" class="border-0 align-middle"><strong th:text="${product.isArchived}">Is Archived?</strong>
+                        </td>
+                        <td class="border-0 align-middle">
+                            <a class="btn btn-primary align-middle"
+                            th:href="@{/product/{productId}(productId=${product.id})}">View</a>
+                            <a sec:authorize="hasAuthority('Admin')" class="btn btn-outline-dark align-middle"
+                            th:href="@{/product/{productId}/edit(productId=${product.id})}">Edit</a>
+                            <a  sec:authorize="hasAuthority('Admin')" class="btn btn-outline-dark align-middle"
+                            th:href="@{/product/{productId}/delete(productId=${product.id})}">Delete</a>
+                        </td>
                     </div>
-                </th>
-                <td class="border-0 align-middle"><strong th:text="'$' + ${product.price}">Product Price</strong></td>
-                <td class="border-0 align-middle"><strong th:text="${product.stock}">Stock Quantity</strong>
-                <td class="border-0 align-middle"><strong th:text="${product.isArchived}">Is Archived?</strong>
-                </td>
-                <td class="border-0 align-middle">
-                    <a class="btn btn-primary align-middle"
-                       th:href="@{/product/{productId}(productId=${product.id})}">View</a>
-                    <a sec:authorize="hasAuthority('Admin')" class="btn btn-outline-dark align-middle"
-                       th:href="@{/product/{productId}/edit(productId=${product.id})}">Edit</a>
-                    <a  sec:authorize="hasAuthority('Admin')" class="btn btn-outline-dark align-middle"
-                       th:href="@{/product/{productId}/delete(productId=${product.id})}">Delete</a>
-                </td>
+                </div>
             </tr>
             </tbody>
         </table>
