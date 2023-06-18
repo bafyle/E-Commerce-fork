@@ -24,8 +24,8 @@
             </div>
             <div th:if="${errorTitle == null}" class="error-template">
                 <h1>An error has occured</h1>
-                <h2>Page Not Found</h2>
-                <div class="error-details">This page does not exist</div>
+                <h2>Unexpected Error</h2>
+                <div class="error-details">Please try again later.</div>
                 <div class="error-actions">
                     <a th:href="@{/}" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-home"></span>
                         Take Me Home </a>
