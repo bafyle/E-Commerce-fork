@@ -130,6 +130,8 @@ public class ProductServiceTest {
         product.setName(name);
         product.setId(id);
         product.setCategory(new Category(1L, "cat"));
+        product.setStock(50);
+        product.setPrice(10.0);
 
         when(categoryService.getCategoryById(product.getCategory().getId())).thenReturn(product.getCategory());
         when(productRepo.findByName(product.getName())).thenReturn(Optional.empty());
@@ -151,6 +153,8 @@ public class ProductServiceTest {
         product.setName(name);
         product.setId(id);
         product.setCategory(new Category(1L, "cat"));
+        product.setStock(50);
+        product.setPrice(10.0);
 
         when(categoryService.getCategoryById(product.getCategory().getId())).thenReturn(product.getCategory());
         when(productRepo.findByName(product.getName())).thenReturn(Optional.of(product));
@@ -190,6 +194,8 @@ public class ProductServiceTest {
         Product product = new Product();
         product.setId(id);
         product.setName("product");
+        product.setStock(50);
+        product.setPrice(10.0);
 
         Product updatedProduct = new Product();
         product.setName(updatedName);
@@ -206,8 +212,9 @@ public class ProductServiceTest {
     public void deleteProduct_SendValidId_ReturnVoid() {
         // Arrange
         Long id = 1L;
-
-        when(productRepo.findById(id)).thenReturn(Optional.of(new Product()));
+        Product product = new Product();
+        product.setIsArchived(false);
+        when(productRepo.findById(id)).thenReturn(Optional.of(product));
         // Act
         // Assert
         assertDoesNotThrow(() -> {productService.deleteProduct(id);});
