@@ -92,8 +92,13 @@ public class ProductService {
             throw new InvalidInputException("Product price can't be less than 0");
         }
 
+
         if (productRepo.findById(id).isEmpty()) {
             throw new NotFoundException("Product id not found.");
+        }
+
+        if (productRepo.findByName(product.getName()).isPresent()) {
+            throw new DuplicateEntityException("Product with this name already exists.");
         }
 
         product.setId(id);
