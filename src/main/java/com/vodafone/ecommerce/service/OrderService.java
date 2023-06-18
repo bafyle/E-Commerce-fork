@@ -99,6 +99,8 @@ public class OrderService {
         order.setPaymentMethod("Card");
         for (CartItem cartItem:
               cartItems) {
+            Product productById = productService.getProductById(cartItem.getProduct().getId());
+
           if (cartItem.getProduct().getIsArchived()) {
                 continue;
             }
@@ -117,6 +119,9 @@ public class OrderService {
             orderItem.setOrder(order);
             orderItem.setProduct(cartItem.getProduct());
             orderItem.setQuantity(cartItem.getQuantity());
+
+            productById.setStock(productById.getStock()-cartItem.getQuantity());
+            productService.updateProduct(productById, productById.getId());
 
             order.getOrderItems().add(orderItem);
         }
