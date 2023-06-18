@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.mail.MailException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
+import com.vodafone.ecommerce.exception.MailServerException;
 import com.vodafone.ecommerce.model.Customer;
 import com.vodafone.ecommerce.model.SecurityUser;
 import com.vodafone.ecommerce.repository.CustomerRepo;
@@ -31,7 +34,15 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
             AuthenticationException exception) throws IOException, ServletException
     {
         String email = request.getParameter("username");
-        loginService.processLoginTry(email, request, response);
+        try
+        {
+            loginService.processLoginTry(email, request, response);
+        }
+        catch(MailException e)
+        {
+            response.sendRedirect("/error");
+            return;
+        }
         String redirectUrl = request.getContextPath() + "/login-failed";
         response.sendRedirect(redirectUrl);
     }
