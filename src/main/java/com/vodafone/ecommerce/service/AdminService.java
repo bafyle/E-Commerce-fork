@@ -51,17 +51,17 @@ public class AdminService {
     }
 
     public Admin updateAdmin(Admin admin, Long id) {
-        if (!ValidationUtil.validateEmail(admin.getEmail())) {
-            throw new InvalidInputException("Invalid email");
-        }
+        Optional<Admin> byId = adminRepo.findById(id);
+
         if (admin.getName().trim().length()<1) {
             throw new InvalidInputException("Name cannot be empty");
         }
-        if (adminRepo.findById(id).isEmpty()) {
+        if (byId.isEmpty()) {
             throw new NotFoundException("Admin not found");
         }
 
         admin.setId(id);
+        admin.setEmail(byId.get().getEmail());
         return adminRepo.save(admin);
     }
 

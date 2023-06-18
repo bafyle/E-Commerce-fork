@@ -58,10 +58,6 @@ public class CustomerService {
     public Customer updateCustomer(Customer customer, Long id) {
         Optional<Customer> customerById = customerRepo.findById(id);
 
-        if (!ValidationUtil.validateEmail(customer.getEmail())) {
-            throw new InvalidInputException("Invalid email");
-        }
-
         if (customer.getName().trim().length() < 1) {
             throw new InvalidInputException("Category name can't be empty");
         }
@@ -77,6 +73,7 @@ public class CustomerService {
         // TODO: limit email change?
         customer.setId(id);
         customer.setCart(customerById.get().getCart());
+        customer.setEmail(customerById.get().getEmail());
         return customerRepo.save(customer);
     }
 
