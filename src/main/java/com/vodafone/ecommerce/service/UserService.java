@@ -1,5 +1,6 @@
 package com.vodafone.ecommerce.service;
 
+import com.vodafone.ecommerce.exception.MailServerException;
 import com.vodafone.ecommerce.exception.UserAlreadyExists;
 import com.vodafone.ecommerce.model.Admin;
 import com.vodafone.ecommerce.model.Cart;
@@ -18,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,15 +51,14 @@ public class UserService
         String randomCode = StringUtils.createRandomString(15);
         customer.setVerficationCode(randomCode);
         customer.setEnabled(false);
+        try {
+            mailService.sendVerificationEmail(customer, request);
+        } catch (UnsupportedEncodingException | MalformedURLException | MessagingException | URISyntaxException | MailException e) {
+            throw new MailServerException("Mail service not available right now, check again later");
+        }
         var cartFromDB = cartRepo.save(new Cart());
         customer.setCart(cartFromDB);
         Customer customerToReturn = cr.save(customer);
-        try {
-            mailService.sendVerificationEmail(customerToReturn, request);
-        } catch (UnsupportedEncodingException | MalformedURLException | MessagingException | URISyntaxException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         return customerToReturn;
     }
 

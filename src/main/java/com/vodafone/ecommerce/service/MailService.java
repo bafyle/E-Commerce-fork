@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class MailService
     
     public void sendVerificationEmail(Customer user, HttpServletRequest request) throws 
     MessagingException,
-    UnsupportedEncodingException, MalformedURLException, URISyntaxException 
+    UnsupportedEncodingException, MalformedURLException, URISyntaxException, MailException
 {
     String toAddress = user.getEmail();
     String fromAddress = EMAIL;
