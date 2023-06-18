@@ -54,7 +54,7 @@ public class UserService
         try {
             mailService.sendVerificationEmail(customer, request);
         } catch (UnsupportedEncodingException | MalformedURLException | MessagingException | URISyntaxException | MailException e) {
-            throw new MailServerException("Mail service not available right now, check again later");
+            throw new MailServerException("Mail service not available right now, please contact the support");
         }
         var cartFromDB = cartRepo.save(new Cart());
         customer.setCart(cartFromDB);
@@ -73,9 +73,8 @@ public class UserService
         admin.setPassword(StringUtils.createRandomString(10));
         try {
             mailService.sendAdminVerficationEmail(admin, request);
-        } catch (UnsupportedEncodingException | MalformedURLException | MessagingException | URISyntaxException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (UnsupportedEncodingException | MalformedURLException | MessagingException | URISyntaxException | MailException e) {
+            throw new MailServerException("Mail service not available right now, check again later");
         }
         Admin adminToReturn = ar.save(admin);
         return adminToReturn;

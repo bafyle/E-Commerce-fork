@@ -35,7 +35,7 @@ public class SecurityConfig
                 .authorizeHttpRequests((request)-> request.requestMatchers(
                         "/login", "/logout", 
                         "/logout-success", "/register", "/verify",
-                        "/login-failed", "/password-reset").permitAll()
+                        "/login-failed", "/password-reset", "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/password-reset")
                         .permitAll()
                         )
