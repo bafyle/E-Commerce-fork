@@ -7,8 +7,10 @@ import java.net.URISyntaxException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
+import com.vodafone.ecommerce.exception.MailServerException;
 import com.vodafone.ecommerce.model.Customer;
 import com.vodafone.ecommerce.repository.CustomerRepo;
 import com.vodafone.ecommerce.util.StringUtils;
@@ -26,7 +28,7 @@ public class LoginService
     @Autowired 
     private MailService mailService;
     
-    public void processLoginTry(String email, HttpServletRequest request, HttpServletResponse response) throws IOException
+    public void processLoginTry(String email, HttpServletRequest request, HttpServletResponse response) throws IOException, MailException
     {
         Optional<Customer> customer = cr.findByEmail(email);
         if(
@@ -47,14 +49,12 @@ public class LoginService
             customerFromDB.setLocked(true);
             customerFromDB.setLoginTries(0);
             customerFromDB.setVerficationCode(StringUtils.createRandomString(15));
-            
+            cr.save(customerFromDB);
             try {
                mailService.sendActivationEmail(customerFromDB, request);
             } catch (UnsupportedEncodingException | MalformedURLException | MessagingException | URISyntaxException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                throw new MailServerException("Mail service not available right now, please contact support team");
             }
         }
-        cr.save(customerFromDB);
     }
 }
